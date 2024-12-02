@@ -1,0 +1,8 @@
+uvicorn
+fastapi
+pandas
+numpy
+json
+requests
+http.client
+urllib.parse
