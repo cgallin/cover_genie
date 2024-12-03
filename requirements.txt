@@ -9,4 +9,4 @@ urllib.parse
 pdfminer.six
 pdfminer.high_level
 extract_text
-
+pickle
