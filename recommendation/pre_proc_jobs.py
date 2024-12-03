@@ -9,17 +9,17 @@ def preprocessor(df):
         # Ensure 'description' column exists
         if 'description' not in df.columns:
             raise ValueError("DataFrame must contain a 'description' column.")
-        
+
         # Drop rows with missing 'description' values
         df_cleaned = df.dropna(subset=['description'])
-        
+
         # Convert text to lowercase and remove punctuation
         translator = str.maketrans('', '', string.punctuation)
         df_cleaned['description'] = df_cleaned['description'].str.lower().str.translate(translator)
-        
+
         # Remove numbers
         df_cleaned['description'] = df_cleaned['description'].str.replace(r'\d+', '', regex=True)
-        
+
         return df_cleaned['description']
 
     text = text_cleaner(df)
