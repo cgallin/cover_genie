@@ -24,6 +24,7 @@ def preprocessor(df):
 
     text = text_cleaner(df)
 
+    # Tokenize the text
     def tokenizer(texts):
         word_tokens = []
         for word in texts:
@@ -32,13 +33,15 @@ def preprocessor(df):
 
     tokens = tokenizer(text)
 
+    # Remove stopwords
     def stopword(text):
-        stop_words = set(stopwords.words('english'))
+        stop_words = set(stopwords.words('english', 'french'))
         tokens_cleaned = [w for w in text if not w in stop_words]
         return tokens_cleaned
 
     no_stopword_tokens = stopword(tokens[0])
 
+    # Lemmatize text
     def lemmatizer(text):
         # Lemmatizing the verbs
         verb_lemmatized = [
