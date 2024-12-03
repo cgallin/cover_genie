@@ -164,3 +164,4 @@ cython_debug/
 
 notebooks/
 raw_data/
+*.ipynb
