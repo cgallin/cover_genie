@@ -1,6 +1,7 @@
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 # import packages to preprocess data, load model, and make predictions
 
 
@@ -28,7 +29,7 @@ app.add_middleware(
     #     job_title_2: str,
     #     job_title_3: str,
     #     location: str,
-    #     user_cv: float,
+    #     user_cv:
     #     industries: str,
     # ):
     # """
