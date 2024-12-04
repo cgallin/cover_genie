@@ -14,4 +14,6 @@ transformers
 nltk
 string
 openai
-tabula-py
+langchain>=0.0.200
+openai>=0.27.0
+pdfminer.six>=20221105
