@@ -163,5 +163,4 @@ cython_debug/
 #.idea/
 
 raw_data/
-*.ipynb
 .DS_Store
