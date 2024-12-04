@@ -163,6 +163,6 @@ cython_debug/
 #.idea/
 
 raw_data/
-notebook/
+notebooks/
 *.ipynb
 .DS_Store
