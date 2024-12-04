@@ -40,25 +40,19 @@ def preprocessor(df):
     # Lemmatize text
     def lemmatize(tokens):
         lemmatizer = WordNetLemmatizer()
-        
+
         def lemmatize_words(words):
             # Lemmatize verbs and nouns
             lemmatized_verbs = [lemmatizer.lemmatize(word, pos='v') for word in words]
             lemmatized_nouns = [lemmatizer.lemmatize(word, pos='n') for word in lemmatized_verbs]
             return lemmatized_nouns
-        
+
         return tokens.apply(lemmatize_words)
 
     lemmatized_tokens = lemmatize(no_stopword_tokens)
 
-<<<<<<< HEAD
     # Return lemmatized tokens as a new DataFrame column
     df['processed_description'] = lemmatized_tokens
-    
+
     #Return new DataFrame with cleaned text
     return pd.DataFrame(df['processed_description'])
-=======
-    imp_words = lemmatizer(no_stopword_tokens)
-
-    return imp_words
->>>>>>> fc07a0eca1571972c022eb8a4cf823f115dcc2ba
