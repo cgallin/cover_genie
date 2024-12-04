@@ -12,8 +12,6 @@ extract_text
 pickle
 transformers
 nltk
-nltk.tokenize
-nltk.corpus
-nltk.stem
 string
 openai
+tabula-py
