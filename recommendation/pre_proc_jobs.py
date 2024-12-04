@@ -26,36 +26,33 @@ def preprocessor(df):
 
     # Tokenize the text
     def tokenizer(texts):
-        word_tokens = []
-        for word in texts:
-            word_tokens.append(word_tokenize(word))
-        return word_tokens
+        return texts.apply(word_tokenize)
 
     tokens = tokenizer(text)
 
     # Remove stopwords
-    def stopword(text):
-        stop_words = set(stopwords.words('english', 'french'))
-        tokens_cleaned = [w for w in text if not w in stop_words]
-        return tokens_cleaned
+    def remove_stopwords(tokens):
+        stop_words = set(stopwords.words('english')).union(stopwords.words('french'))
+        return tokens.apply(lambda words: [w for w in words if w not in stop_words])
 
-    no_stopword_tokens = stopword(tokens[0])
+    no_stopword_tokens = remove_stopwords(tokens)
 
     # Lemmatize text
-    def lemmatizer(text):
-        # Lemmatizing the verbs
-        verb_lemmatized = [
-            WordNetLemmatizer().lemmatize(word, pos = "v") # v --> verbs
-            for word in text
-        ]
+    def lemmatize(tokens):
+        lemmatizer = WordNetLemmatizer()
+        
+        def lemmatize_words(words):
+            # Lemmatize verbs and nouns
+            lemmatized_verbs = [lemmatizer.lemmatize(word, pos='v') for word in words]
+            lemmatized_nouns = [lemmatizer.lemmatize(word, pos='n') for word in lemmatized_verbs]
+            return lemmatized_nouns
+        
+        return tokens.apply(lemmatize_words)
 
-        # 2 - Lemmatizing the nouns
-        noun_lemmatized = [
-            WordNetLemmatizer().lemmatize(word, pos = "n") # n --> nouns
-            for word in verb_lemmatized
-        ]
-        return noun_lemmatized
+    lemmatized_tokens = lemmatize(no_stopword_tokens)
 
-    imp_words = lemmatizer(no_stopword_tokens)
-
-    return imp_words
+    # Return lemmatized tokens as a new DataFrame column
+    df['processed_description'] = lemmatized_tokens
+    
+    #Return new DataFrame with cleaned text
+    return pd.DataFrame(df['processed_description'])
