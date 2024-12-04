@@ -45,5 +45,6 @@ app.add_middleware(
     # return {'fare': float(y_pred[0])}
 
 
-# @app.get("/")
-# Insert function to return a welcome message here.
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
