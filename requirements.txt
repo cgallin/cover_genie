@@ -10,7 +10,10 @@ pdfminer.six
 pdfminer.high_level
 extract_text
 pickle
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-import string
+transformers
+nltk
+nltk.tokenize
+nltk.corpus
+nltk.stem
+string
+openai
