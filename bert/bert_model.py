@@ -7,22 +7,37 @@ import tensorflow as tf
 import tensorflow_text as text
 import keras_hub
 import keras_core as keras
+import pre_proc_linkedin as pp
 
 
 
 
-# Load a DistilBERT model.
-preset= "distil_bert_base_en_uncased"
+def train_model():
+    X, y = pp.load_data()
+    X = X.apply(lambda x: pp.clean_text(x))
+    y_encoded = pp.features_encoder(y)
 
-# Use a shorter sequence length.
-preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(preset,
-                                                                   sequence_length=SEQUENCE_LENGTH,
-                                                                   name="preprocessor_4_tweets"
-                                                                  )
+    X_train, X_test, y_train, y_test, X_val, y_val = pp.split_data(X, y_encoded)
+    #define model parameters
+    model = keras_hub.models.DistilBertClassifier.from_preset(
+                    PRE_TRAINED_MODEL_NAME,
+                    preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(PRE_TRAINED_MODEL_NAME,
+                                                                    sequence_length=SEQUENCE_LENGTH,
+                                                                    name=PREPROCESSOR_NAME),
+                    num_classes=NUM_CLASSES)
+    #Compile the model
+    model.compile(
+        loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE),
+        metrics= ["accuracy"])
+    #Fit the model
+    history = model.fit(x=X_train,
+                         y=y_train,
+                         batch_size=BATCH_SIZE,
+                         epochs=EPOCHS,
+                         validation_data=(X_val, y_val)
+                        )
+    return {"model": model, "history": history,"Score": model.evaluate(X_test, y_test)}
 
-# Pretrained classifier.
-classifier = keras_hub.models.DistilBertClassifier.from_preset(preset,
-                                                               preprocessor = preprocessor,
-                                                               num_classes=12)
-
-classifier.summary()
+def save_model(model, path):
+    model.save(path)
