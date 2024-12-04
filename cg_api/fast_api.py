@@ -1,7 +1,7 @@
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import openai
+
 # import packages to preprocess data, load model, and make predictions
 
 

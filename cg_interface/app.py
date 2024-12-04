@@ -77,8 +77,8 @@ def input():
     st.write(query_params)
     return query_params
 
-url = ''
-params = input()
+# url = ''
+# params = input()
 
 
 
@@ -86,8 +86,6 @@ params = input()
 #     pred = requests.get(url, params=query_params).json()
 #     # pred["fare"] = pred["fare"]
 #     # st.markdown(f'This ride will cost you: ${pred["fare"]}')
-
-
 
 
 # # Output from recommendation system: displaying job recommendations in a dataframe.
