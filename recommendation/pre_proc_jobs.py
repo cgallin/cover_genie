@@ -9,17 +9,17 @@ def preprocessor(df):
         # Ensure 'description' column exists
         if 'description' not in df.columns:
             raise ValueError("DataFrame must contain a 'description' column.")
-        
+
         # Drop rows with missing 'description' values
         df_cleaned = df.dropna(subset=['description'])
-        
+
         # Convert text to lowercase and remove punctuation
         translator = str.maketrans('', '', string.punctuation)
         df_cleaned['description'] = df_cleaned['description'].str.lower().str.translate(translator)
-        
+
         # Remove numbers
         df_cleaned['description'] = df_cleaned['description'].str.replace(r'\d+', '', regex=True)
-        
+
         return df_cleaned['description']
 
     text = text_cleaner(df)
@@ -51,8 +51,14 @@ def preprocessor(df):
 
     lemmatized_tokens = lemmatize(no_stopword_tokens)
 
+<<<<<<< HEAD
     # Return lemmatized tokens as a new DataFrame column
     df['processed_description'] = lemmatized_tokens
     
     #Return new DataFrame with cleaned text
     return pd.DataFrame(df['processed_description'])
+=======
+    imp_words = lemmatizer(no_stopword_tokens)
+
+    return imp_words
+>>>>>>> fc07a0eca1571972c022eb8a4cf823f115dcc2ba
