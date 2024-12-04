@@ -2,6 +2,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
 
+API_KEY = 1
 # Define the function
 def generate_cover_letters(user_cv, job_descriptions):
     """
@@ -17,7 +18,7 @@ def generate_cover_letters(user_cv, job_descriptions):
 
     # Step 2: Set up the OpenAI API and LLM
     llm = OpenAI(
-        openai_api_key="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",
+        openai_api_key=API_KEY,
         temperature=0.7,
         max_tokens=800
     )
