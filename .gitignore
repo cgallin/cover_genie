@@ -165,5 +165,6 @@ cython_debug/
 
 
 raw_data/
-*.ipynb
 .DS_Store
+notebooks/
+*.ipynb
