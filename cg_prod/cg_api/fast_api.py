@@ -16,30 +16,27 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# @app.get("/predict")
-# Insert function to make predictions here.
+# @app.get("/generate_cover_letter")
+# Insert function to generate cover letters.
 
-# def predict(
-    #     pickup_datetime: str,  # 2014-07-06 19:18:00
-    #     pickup_longitude: float,    # -73.950655
-    #     pickup_latitude: float,     # 40.783282
-    #     dropoff_longitude: float,   # -73.984365
-    #     dropoff_latitude: float,    # 40.769802
-    #     passenger_count: int
-    # ):      # 1
+
+# @app.get("/recommend")
+# Insert function to generate job recommendations
+
+# def recommend(query_params: dict):
+    #     job_title_1: str,
+    #     job_title_2: str,
+    #     job_title_3: str,
+    #     location: str,
+    #     user_cv: float,
+    #     industries: str,
+    # ):
     # """
     # Make a single course prediction.
     # Assumes `pickup_datetime` is provided as a string by the user in "%Y-%m-%d %H:%M:%S" format
     # Assumes `pickup_datetime` implicitly refers to the "US/Eastern" timezone (as any user in New York City would naturally write)
     # """
-    # X_pred = pd.DataFrame({
-    #     'pickup_datetime': [pd.Timestamp(pickup_datetime, tz="US/Eastern")],
-    #     'pickup_longitude': [pickup_longitude],
-    #     'pickup_latitude': [pickup_latitude],
-    #     'dropoff_longitude': [dropoff_longitude],
-    #     'dropoff_latitude': [dropoff_latitude],
-    #     'passenger_count': [passenger_count]
-    #     })
+    # X_pred = pd.DataFrame(query_params)
 
     # X_pred = preprocess_features(X_pred)
     # model = app.state.model
