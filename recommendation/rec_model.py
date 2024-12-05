@@ -1,23 +1,32 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def recommendation(resume_words, job_desc_words, k=5):
-    # Combine all text data for fitting the vectorizer
-    resumes = resume_words['processed_description'].str.split().sum()
-    job_desc = job_desc_words['processed_description'].str.split().sum()
+def recommendation(resume_text, job_texts, k=5):
+    """
+    Recommends top k jobs for a given resume based on text similarity.
+
+    Parameters:
+    - resume_text: A single resume description (processed).
+    - job_texts: List or Series of job descriptions (processed).
+    - k: Number of top job recommendations.
+
+    Returns:
+    - List of tuples containing job indices and similarity scores for the top k jobs.
+    """
+    # Ensure inputs are in the correct format
+    if isinstance(job_texts, list):
+        job_texts = pd.Series(job_texts)
 
     # Vectorizing the text data
     vectorizer = TfidfVectorizer()
-    job_desc_tfidf = vectorizer.fit_transform(job_desc_words['processed_description'])
-    resume_tfidf = vectorizer.transform(resume_words['processed_description'])
+    job_desc_tfidf = vectorizer.fit_transform(job_texts)
+    resume_tfidf = vectorizer.transform([resume_text])  # Transform single resume
 
-    # Compute the cosine similarity between job descriptions and resumes
-    tfidf_similarity_matrix = cosine_similarity(job_desc_tfidf, resume_tfidf)
+    # Compute the cosine similarity between the resume and all job descriptions
+    tfidf_similarity_scores = cosine_similarity(job_desc_tfidf, resume_tfidf).flatten()
 
-    # Iterate through each resume and find the top k most similar jobs
-    for resume_idx in range(tfidf_similarity_matrix.shape[1]):  # Loop over resumes
-        top_jobs = tfidf_similarity_matrix[:, resume_idx].argsort()[::-1][:k]
-        print(f"Resume {resume_idx}: Top {k} jobs")
-        for job_idx in top_jobs:
-            similarity_score = tfidf_similarity_matrix[job_idx, resume_idx]
-            print(f"  Job {job_idx}, Similarity: {similarity_score:.4f}")
+    # Find the top k most similar jobs
+    top_jobs = tfidf_similarity_scores.argsort()[::-1][:k]
+    top_job_scores = [(job_idx, tfidf_similarity_scores[job_idx]) for job_idx in top_jobs]
+
+    return top_job_scores
