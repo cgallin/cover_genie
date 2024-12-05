@@ -1,58 +1,60 @@
 import pandas as pd
-from nltk.tokenize import word_tokenize
+import re
+from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-import string
+from nltk import pos_tag
+import nltk
 
-def preprocessor(df):
-    def text_cleaner(df):
-        # Ensure 'description' column exists
-        if 'description' not in df.columns:
-            raise ValueError("DataFrame must contain a 'description' column.")
+# Ensure necessary NLTK resources are downloaded
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
 
-        # Drop rows with missing 'description' values
-        df_cleaned = df.dropna(subset=['description'])
+def preprocessor(text):
+    # Clean the text
+    def text_cleaner(text):
+        # Apply regex to clean text (keep only letters, replace others with space)
+        cleaned_text = re.sub('[^a-zA-Z]', ' ', text)
+        
+        # Convert to lowercase
+        cleaned_text = cleaned_text.lower()
+        
+        return cleaned_text
 
-        # Convert text to lowercase and remove punctuation
-        translator = str.maketrans('', '', string.punctuation)
-        df_cleaned['description'] = df_cleaned['description'].str.lower().str.translate(translator)
-
-        # Remove numbers
-        df_cleaned['description'] = df_cleaned['description'].str.replace(r'\d+', '', regex=True)
-
-        return df_cleaned['description']
-
-    text = text_cleaner(df)
-
-    # Tokenize the text
-    def tokenizer(texts):
-        return texts.apply(word_tokenize)
-
-    tokens = tokenizer(text)
-
-    # Remove stopwords
-    def remove_stopwords(tokens):
+    # Process sentences within the cleaned text
+    def process_sentences(text):
+        # Set up stopwords and lemmatizer
         stop_words = set(stopwords.words('english')).union(stopwords.words('french'))
-        return tokens.apply(lambda words: [w for w in words if w not in stop_words])
-
-    no_stopword_tokens = remove_stopwords(tokens)
-
-    # Lemmatize text
-    def lemmatize(tokens):
         lemmatizer = WordNetLemmatizer()
-
-        def lemmatize_words(words):
-            # Lemmatize verbs and nouns
-            lemmatized_verbs = [lemmatizer.lemmatize(word, pos='v') for word in words]
-            lemmatized_nouns = [lemmatizer.lemmatize(word, pos='n') for word in lemmatized_verbs]
-            return lemmatized_nouns
-
-        return tokens.apply(lemmatize_words)
-
-    lemmatized_tokens = lemmatize(no_stopword_tokens)
-
-    # Return lemmatized tokens as a new DataFrame column
-    df['processed_description'] = lemmatized_tokens
-
-    #Return new DataFrame with cleaned text
-    return pd.DataFrame(df['processed_description'])
+        
+        # Extract features from sentences
+        def extract_features(text):
+            features = ""
+            sentences = sent_tokenize(text)
+            for sent in sentences:
+                # Tokenize, remove stopwords, and filter by POS tags
+                words = word_tokenize(sent)
+                words = [word for word in words if word not in stop_words]
+                tagged_words = pos_tag(words)
+                filtered_words = [word for word, tag in tagged_words if tag not in ['DT', 'IN', 'TO', 'PRP', 'WP']]
+                
+                # Lemmatize remaining words
+                lemmatized_words = [lemmatizer.lemmatize(word, pos='v') for word in filtered_words]
+                lemmatized_words = [lemmatizer.lemmatize(word, pos='n') for word in lemmatized_words]
+                
+                # Append to features
+                features += " ".join(lemmatized_words) + " "
+            return features.strip()
+        
+        # Apply feature extraction to the text
+        return extract_features(text)
+    
+    # Apply text cleaning
+    cleaned_text = text_cleaner(text)
+    
+    # Process sentences and extract features
+    processed_text = process_sentences(cleaned_text)
+    
+    return processed_text
