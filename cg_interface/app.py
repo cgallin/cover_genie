@@ -1,16 +1,22 @@
 import streamlit as st
+from streamlit_extras.switch_page_button import switch_page
 from io import StringIO
 import requests
-import pandas as pd
-import numpy as np
+from open_ai.pdf_preproc import pdf_to_text
+
+
 
 # User input page
 
 st.markdown(''' # Cover Genie 🧞‍♀️''')
-st.markdown(''' # Automate your job search: Generate Cover letters with ease!''')
 
 st.markdown(''' Please enter the following information to generate relevant job postings:''')
 
+job_title_1 = st.text_input('Enter a first desired job title: ')
+job_title_2 = st.text_input('Enter a second desired job title: ')
+job_title_3 = st.text_input('Enter a third desired job title: ')
+
+st.write('Select the relevant industries for your job search: ')
 
 industries = ['Healthcare and Biotechnology',
             'Technology',
@@ -32,70 +38,32 @@ industries = ['Healthcare and Biotechnology',
             'Environmental and Renewable Energy',
             'Utilities']
 
-# Selecting Job industry
-def get_select_industries():
-    st.write('Select the relevant industries for your job search: ')
+selected_industries = []
+for industry in industries:
+    if st.checkbox(industry):
+        selected_industries.append(industry)
 
-    selected_industries = []
-
-    for industry in industries:
-        st.checkbox(industry)
-        if industry:
-            selected_industries.append(industry)
-
-    st.write('You selected:', selected_industries)
-    return selected_industries
-
-# Get input function
-def input():
-    job_title_1 = st.text_input('Enter a first desired job title: '),
-    job_title_2 = st.text_input('Enter a second desired job title: '),
-    job_title_3 = st.text_input('Enter a third desired job title: '),
-
-    location = st.multiselect(
+location = st.multiselect(
      'Enter the desired work location: ',
      ['Montreal', 'Toronto'])
 
-    user_cv = st.file_uploader('Upload your CV in PDF format: ', type=['pdf'], accept_multiple_files=False),
+with st.form("my_form"):
+    upload = st.file_uploader('Upload your CV in PDF format: ', type=['pdf'], accept_multiple_files=False),
+    submitted = st.form_submit_button("Upload")
 
-    if user_cv is not None:
-        # To read file as bytes:
-        bytes_data = user_cv.getvalue() # not sure about this bit, how to make it work with the pdf text extractor
-        st.write('filename:', user_cv.name)
+if submitted:
+    user_cv = pdf_to_text(upload[0])
 
-    industries = get_select_industries()
+query_params = {
+    'job_title_1': job_title_1,
+    'job_title_2': job_title_2,
+    'job_title_3': job_title_3,
+    'location': location,
+    'industries': selected_industries,
+}
 
-    # Getting params to generate job recommendations,
-    query_params = {
-        'job_title_1': job_title_1,
-        'job_title_2': job_title_2,
-        'job_title_3': job_title_3,
-        'location': location,
-        'user_cv': bytes_data,
-        'industries': industries,
-    }
-    st.write(query_params)
-    return query_params
+if query_params not in st.session_state:
+    st.session_state.query_params = query_params
 
-# url = ''
-# params = input()
-
-
-
-# if st.button('Recommend jobs'):
-#     pred = requests.get(url, params=query_params).json()
-#     # pred["fare"] = pred["fare"]
-#     # st.markdown(f'This ride will cost you: ${pred["fare"]}')
-
-
-# # Output from recommendation system: displaying job recommendations in a dataframe.
-
-# def get_dataframe_data():
-
-#     return pd.DataFrame(
-# # data frame with job recommendations: Job title, company, job description, apply button
-#         )
-
-# df = get_dataframe_data()
-
-# # Generate cover letter page
+if st.button("Recommend jobs"):
+    switch_page("job_postings")  # Match the file name of Page1.py (case-sensitive)
