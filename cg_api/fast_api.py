@@ -1,9 +1,8 @@
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-# import packages to preprocess data, load model, and make predictions
-
+from open_ai.prompt import generate_cover_letters
+from recommendation.rec_model import recommendation
 
 app = FastAPI()
 app.state.model = None #function to load model.
@@ -17,26 +16,24 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# @app.get("/generate")
-# Insert function to generate cover letters.
+@app.get("/generate")
+def generate_end(user_cv, job_descriptions):
+    ''' API end which generates cover letters based on user CV and job descriptions using OpenAI API.
+    Returns a dictionary with 5 cover letters. '''
 
+    cover_letters = generate_cover_letters(user_cv, job_descriptions)
+    sep_cover_letters = {
+        "cover_letter_1": cover_letters[0],
+        "cover_letter_2": cover_letters[1],
+        "cover_letter_3": cover_letters[2],
+        "cover_letter_4": cover_letters[3],
+        "cover_letter_5": cover_letters[4]
+    }
+    return sep_cover_letters
 
-# @app.get("/recommend")
-# Insert function to generate job recommendations
-
-# def recommend(query_params: dict):
-    #     job_title_1: str,
-    #     job_title_2: str,
-    #     job_title_3: str,
-    #     location: str,
-    #     user_cv:
-    #     industries: str,
-    # ):
-    # """
-    # Make a single course prediction.
-    # Assumes `pickup_datetime` is provided as a string by the user in "%Y-%m-%d %H:%M:%S" format
-    # Assumes `pickup_datetime` implicitly refers to the "US/Eastern" timezone (as any user in New York City would naturally write)
-    # """
+@app.get("/recommend")
+def recommend(job_title, location, industries, user_cv):
+    ''' API end which generates job recommendations based on user input.'''
     # X_pred = pd.DataFrame(query_params)
 
     # X_pred = preprocess_features(X_pred)
