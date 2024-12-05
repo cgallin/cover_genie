@@ -3,7 +3,6 @@ import pyperclip
 
 st.markdown(''' # Your Generated Cover Letters 🧞‍♀️''')
 
-
 with st.expander("# Job title - Company"):
     cover_1 = st.write(''' Cover letter text ... ''')
     st.write(''' Here is the {url} to apply to this job.''')
