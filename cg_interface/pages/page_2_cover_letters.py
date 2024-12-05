@@ -1,6 +1,8 @@
 import streamlit as st
 import pyperclip
 
+cover_letters = st.session_state.response
+
 st.markdown(''' # Your Generated Cover Letters 🧞‍♀️''')
 
 with st.expander("# Job title - Company"):
