@@ -44,7 +44,8 @@ query_params = {
     'job_title_2':job_title_2,
     'job_title_3':job_title_3,
     'location':location,
-    'industries':industries
+    'industries':industries,
+    'user_cv':user_cv
 }
 
 if st.button("Recommend jobs"):
