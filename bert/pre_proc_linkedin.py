@@ -77,7 +77,7 @@ def industry_map():
         "Investment Banking", "Investment Management", "Capital Markets",
         "Venture Capital and Private Equity Principals", "Mortgage Services",
         "Credit Intermediation", "Loan Brokers", "Pension Funds",
-        "Funds and Trusts", "Trusts and Estates","Accounting"
+        "Funds and Trusts", "Trusts and Estates","Accounting","Financial Services",
     ],
     "Real Estate, Property Management, and Construction": [
          "Leasing Non-residential Real Estate","Custruction","Real Estate",
