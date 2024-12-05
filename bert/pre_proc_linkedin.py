@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 import re
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+import params as pm
 
 def industry_map():
     map = pd.read_csv("../raw_data/job_postings_data/mappings/industries.csv")
@@ -163,7 +164,7 @@ def load_data():
     df = df.merge(industries.merge(map,how="left", on ="industry_id").set_index("industry_id"),how="left", on ="job_id")
     big_industries=df.industry_name.value_counts()[df.industry_name.value_counts()>3000].index.tolist()
     df = df[df['industry_name'].isin(big_industries)]
-    df= df.dropna(subset=["description"])
+    df= df.dropna(subset=["description"]).sample(frac=pm.SAMPLE_FRAC)
     return df["description"], df["industry_name"]
 
 def clean_text(text):
