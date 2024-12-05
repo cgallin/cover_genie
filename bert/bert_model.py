@@ -42,9 +42,15 @@ def train_model():
                          validation_data=(X_val, y_val)
                         )
     # Save the model
-    model_filename = f"model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    model.save(model/model_filename)
-    return {"model": model, "history": history}
+    model.save(f"models/model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}")
     print("Model trained and saved")
+    return {"model": model, "history": history}
+
+def predict_model(model, X_test):
+    # Predict the model
+    y_prob = model.predict(X_test)
+    y_pred = y_prob.argmax(axis=1)
+    return y_pred, y_prob
+
 
 train_model()
