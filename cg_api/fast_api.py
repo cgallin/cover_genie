@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# @app.get("/generate_cover_letter")
+# @app.get("/generate")
 # Insert function to generate cover letters.
 
 
