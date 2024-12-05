@@ -1,10 +1,10 @@
 import pandas as pd
 import re
+import nltk
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
-import nltk
 
 # Ensure necessary NLTK resources are downloaded
 nltk.download('punkt')
