@@ -8,6 +8,9 @@ import tensorflow_text as text
 import keras_hub
 import keras_core as keras
 import pre_proc_linkedin as pp
+import params as pm
+import datetime
+
 
 
 
@@ -18,26 +21,30 @@ def train_model():
     y_encoded = pp.features_encoder(y)
 
     X_train, X_test, y_train, y_test, X_val, y_val = pp.split_data(X, y_encoded)
+    print("Data loaded and preprocessed")
     #define model parameters
     model = keras_hub.models.DistilBertClassifier.from_preset(
-                    PRE_TRAINED_MODEL_NAME,
-                    preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(PRE_TRAINED_MODEL_NAME,
-                                                                    sequence_length=SEQUENCE_LENGTH,
-                                                                    name=PREPROCESSOR_NAME),
-                    num_classes=NUM_CLASSES)
+                    pm.PRE_TRAINED_MODEL_NAME,
+                    preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(pm.PRE_TRAINED_MODEL_NAME,
+                                                                    sequence_length=pm.SEQUENCE_LENGTH,
+                                                                    name=pm.PREPROCESSOR_NAME),
+                    num_classes=pm.NUM_CLASSES)
     #Compile the model
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-        optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=pm.LEARNING_RATE),
         metrics= ["accuracy"])
     #Fit the model
     history = model.fit(x=X_train,
                          y=y_train,
-                         batch_size=BATCH_SIZE,
-                         epochs=EPOCHS,
+                         batch_size=pm.BATCH_SIZE,
+                         epochs=pm.EPOCHS,
                          validation_data=(X_val, y_val)
                         )
-    return {"model": model, "history": history,"Score": model.evaluate(X_test, y_test)}
+    # Save the model
+    model_filename = f"model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    model.save(model/model_filename)
+    return {"model": model, "history": history}
+    print("Model trained and saved")
 
-def save_model(model, path):
-    model.save(path)
+train_model()
