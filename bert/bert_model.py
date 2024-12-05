@@ -7,22 +7,44 @@ import tensorflow as tf
 import tensorflow_text as text
 import keras_hub
 import keras_core as keras
+import pre_proc_linkedin as pp
+import params as pm
+import datetime
 
 
 
 
-# Load a DistilBERT model.
-preset= "distil_bert_base_en_uncased"
 
-# Use a shorter sequence length.
-preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(preset,
-                                                                   sequence_length=SEQUENCE_LENGTH,
-                                                                   name="preprocessor_4_tweets"
-                                                                  )
+def train_model():
+    X, y = pp.load_data()
+    X = X.apply(lambda x: pp.clean_text(x))
+    y_encoded = pp.features_encoder(y)
 
-# Pretrained classifier.
-classifier = keras_hub.models.DistilBertClassifier.from_preset(preset,
-                                                               preprocessor = preprocessor,
-                                                               num_classes=12)
+    X_train, X_test, y_train, y_test, X_val, y_val = pp.split_data(X, y_encoded)
+    print("Data loaded and preprocessed")
+    #define model parameters
+    model = keras_hub.models.DistilBertClassifier.from_preset(
+                    pm.PRE_TRAINED_MODEL_NAME,
+                    preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(pm.PRE_TRAINED_MODEL_NAME,
+                                                                    sequence_length=pm.SEQUENCE_LENGTH,
+                                                                    name=pm.PREPROCESSOR_NAME),
+                    num_classes=pm.NUM_CLASSES)
+    #Compile the model
+    model.compile(
+        loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=pm.LEARNING_RATE),
+        metrics= ["accuracy"])
+    #Fit the model
+    history = model.fit(x=X_train,
+                         y=y_train,
+                         batch_size=pm.BATCH_SIZE,
+                         epochs=pm.EPOCHS,
+                         validation_data=(X_val, y_val)
+                        )
+    # Save the model
+    model_filename = f"model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    model.save(model/model_filename)
+    return {"model": model, "history": history}
+    print("Model trained and saved")
 
-classifier.summary()
+train_model()
