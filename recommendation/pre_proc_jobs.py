@@ -12,32 +12,26 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 
-def preprocessor(df):
-    # Clean and preprocess text
-    def text_cleaner(df):
-        if 'description' not in df.columns:
-            raise ValueError("DataFrame must contain a 'description' column.")
-        
-        # Drop rows with missing descriptions
-        df_cleaned = df.dropna(subset=['description']).copy()
-        
+def preprocessor(text):
+    # Clean the text
+    def text_cleaner(text):
         # Apply regex to clean text (keep only letters, replace others with space)
-        df_cleaned['description'] = df_cleaned['description'].apply(lambda x: re.sub('[^a-zA-Z]', ' ', x))
+        cleaned_text = re.sub('[^a-zA-Z]', ' ', text)
         
         # Convert to lowercase
-        df_cleaned['description'] = df_cleaned['description'].str.lower()
+        cleaned_text = cleaned_text.lower()
         
-        return df_cleaned['description']
+        return cleaned_text
 
     # Process sentences within the cleaned text
-    def process_sentences(texts):
+    def process_sentences(text):
         # Set up stopwords and lemmatizer
         stop_words = set(stopwords.words('english')).union(stopwords.words('french'))
         lemmatizer = WordNetLemmatizer()
         
         # Extract features from sentences
         def extract_features(text):
-            features = {'feature': ""}
+            features = ""
             sentences = sent_tokenize(text)
             for sent in sentences:
                 # Tokenize, remove stopwords, and filter by POS tags
@@ -51,18 +45,16 @@ def preprocessor(df):
                 lemmatized_words = [lemmatizer.lemmatize(word, pos='n') for word in lemmatized_words]
                 
                 # Append to features
-                features['feature'] += " ".join(lemmatized_words) + " "
-            return features['feature']
+                features += " ".join(lemmatized_words) + " "
+            return features.strip()
         
-        # Apply feature extraction to all texts
-        return texts.apply(extract_features)
+        # Apply feature extraction to the text
+        return extract_features(text)
     
     # Apply text cleaning
-    cleaned_text = text_cleaner(df)
+    cleaned_text = text_cleaner(text)
     
     # Process sentences and extract features
     processed_text = process_sentences(cleaned_text)
     
-    # Add processed text as a new column
-    df['processed_description'] = processed_text
-    return df[['processed_description']].copy()
+    return processed_text
