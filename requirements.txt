@@ -14,4 +14,4 @@ transformers
 nltk
 string
 openai
-tabula-py
+pyperclip
