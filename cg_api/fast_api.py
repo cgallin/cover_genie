@@ -39,10 +39,7 @@ def recommend(job_title, location, industries, user_cv):
     job_postings = pd.read_csv('filtered_jobs.csv') # change to actual complete csv when ready
     filtered_jobs = filter_location_and_industries(job_postings, location, industries)
 
-    input = job_title + ' ' + user_cv
-    combined_input = preprocessor(input)
-
-    recommended_jobs = recommendation(combined_input, filtered_jobs, k=5)
+    recommended_jobs = recommendation(user_cv,job_title, filtered_jobs, k=5)
 
     return recommended_jobs.to_dict(orient='records')
 

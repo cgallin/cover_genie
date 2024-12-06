@@ -7,6 +7,7 @@ for prediction in st.session_state.prediction:
     st.write(prediction)
 
 recommended_jobs = st.session_state.prediction
+st.write(recommended_jobs)
 
 st.markdown(''' # Recommended Job Postings 🧞‍♀️''')
 
@@ -38,7 +39,7 @@ params = {
 }
 
 if st.button("Generate cover letters"):
-        url = ''
+        url = 'http://127.0.0.1:8000/generate'
         response = requests.get(url, params=params).json()
         if 'response' not in st.session_state:
             st.session_state.response = response
