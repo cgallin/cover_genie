@@ -1,7 +1,8 @@
 import pickle
 
-with open("../api_data/data_toronto_jobs.pkl", "rb") as file:
-    df_toronto = pickle.load(file)
 
-with open("api_data/data_montreal_jobs.pkl", "rb") as file:
-    df_montreal = pickle.load(file)
+# Import the API data, enter the path as string
+def pull_api_data(path):
+    with open(path, "rb") as file:
+        df_api = pickle.load(file)
+    return df_api
