@@ -6,11 +6,14 @@ from open_ai.pdf_preproc import pdf_to_text
 # Function to unpack the prediction from the API?
 
 
-for prediction in st.session_state.prediction:
-    st.write(prediction)
+# for prediction in st.session_state.prediction:
+#     st.write(prediction.values)
 
-recommended_jobs = st.session_state.prediction
-st.write(recommended_jobs)
+# for the_values in st.session_state.prediction.values():
+#     st.write(the_values)
+
+# recommended_jobs = st.session_state.prediction
+# st.write(recommended_jobs)
 
 st.markdown(''' # Recommended Job Postings 🧞‍♀️''')
 

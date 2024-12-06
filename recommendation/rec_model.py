@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def recommendation(user_cv, job_title, filtered_jobs, k=5):
+def recommendation( user_cv,job_title, filtered_jobs, k=5):
     """
     Recommends top k jobs for a given resume based on text similarity and retrieves job details.
 
@@ -39,3 +39,5 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
 
     # Return the top k job recommendations
     return top_jobs_df
+
+# print(recommendation('user_cv', 'job_title', pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/processed_data.csv'), k=5))
