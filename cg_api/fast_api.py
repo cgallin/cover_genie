@@ -42,7 +42,7 @@ def recommend(job_title, location, industries, user_cv):
     input = job_title + ' ' + user_cv
     combined_input = preprocessor(input)
 
-    recommended_jobs = recommendation(combined_input, filtered_jobs['description'], filtered_jobs)
+    recommended_jobs = recommendation(combined_input, filtered_jobs, k=5)
 
     return recommended_jobs.to_dict(orient='records')
 
