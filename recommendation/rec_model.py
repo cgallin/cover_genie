@@ -39,3 +39,5 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
 
     # Return the top k job recommendations
     return top_jobs_df
+
+print(recommendation('test', 'test', pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/filtered_jobs.csv')))
