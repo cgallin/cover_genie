@@ -12,7 +12,7 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 
-def filter_jobs_by_location_and_industries(df, location, industries):
+def filter_location_and_industries(df, location, industries):
     """
     Filters the jobs dataframe by location and industries.
 
@@ -26,6 +26,10 @@ def filter_jobs_by_location_and_industries(df, location, industries):
     filtered_df = df[df['location'] == location]
     if industries:
         filtered_df = filtered_df[filtered_df['industries'].isin(industries)]
+
+    columns_to_keep = ['title', 'company', 'description']
+    filtered_df = filtered_df[columns_to_keep]
+
     return filtered_df
 
 
