@@ -19,10 +19,11 @@ import pickle
 def train_model():
 
 
-
+    # Load cleaned data
     with open('/Users/camerongallinger/code/cgallin/cover_genie/bert/clean_data/data.pkl', 'rb') as file:
         data = pickle.load(file)
-    data = data.sample(frac=pm.SAMPLE_FRAC)
+
+    data = data.sample(frac=pm.SAMPLE_FRAC, random_state=42)
 
     X = data["description_cleaned"]
     y = data["label"]
@@ -43,18 +44,19 @@ def train_model():
                                                                     num_classes=pm.NUM_CLASSES,
                                                                     activation="softmax",
                                                                     dropout_rate=pm.DROPOUT_RATE)
-    model.backbone.trainable = False
+    model.backbone.trainable = pm.TRAINABLE
     #Compile the model
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
         optimizer=tf.keras.optimizers.Adam(learning_rate=pm.LEARNING_RATE),
-        metrics= ["accuracy"])
+        metrics= ["accuracy"] )
     #Fit the model
     history = model.fit(x=X_train,
                          y=y_train,
                          batch_size=pm.BATCH_SIZE,
                          epochs=pm.EPOCHS,
-                         validation_data=(X_val, y_val)
+                         validation_data=(X_val, y_val),
+                         class_weight=pm.CLASS_WEIGHTS,
                         )
     # Save the model
     model.save(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.keras")
