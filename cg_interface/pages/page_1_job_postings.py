@@ -3,6 +3,9 @@ from streamlit_extras.switch_page_button import switch_page
 import requests
 from open_ai.pdf_preproc import pdf_to_text
 
+# Function to unpack the prediction from the API?
+
+
 for prediction in st.session_state.prediction:
     st.write(prediction)
 
