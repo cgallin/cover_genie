@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from open_ai.prompt import generate_cover_letters
 from recommendation.rec_model import recommendation
+from recommendation.pre_proc_jobs import preprocessor, filter_location_and_industries
 
 app = FastAPI()
 app.state.model = None #function to load model.
@@ -34,13 +35,16 @@ def generate_end(user_cv, job_descriptions):
 @app.get("/recommend")
 def recommend(job_title, location, industries, user_cv):
     ''' API end which generates job recommendations based on user input.'''
-    # X_pred = pd.DataFrame(query_params)
 
-    # X_pred = preprocess_features(X_pred)
-    # model = app.state.model
-    # y_pred = model.predict(X_pred)
+    job_postings = pd.read_csv('')
+    filtered_jobs = filter_location_and_industries(job_postings, location, industries)
 
-    # return {'fare': float(y_pred[0])}
+    input = job_title + ' ' + user_cv
+    combined_input = preprocessor(input)
+
+    recommended_jobs = recommendation(combined_input, filtered_jobs['description'], filtered_jobs)
+
+    return recommended_jobs.to_dict(orient='records')
 
 
 @app.get("/")
