@@ -7,28 +7,43 @@ import tensorflow as tf
 import tensorflow_text as text
 import keras_hub
 import keras_core as keras
-import pre_proc_linkedin as pp
-import params as pm
+import bert.pre_proc_linkedin as pre_proc_linkedin
+import bert.params as pm
 import datetime
+import pickle
 
 
 
 
 
 def train_model():
-    X, y = pp.load_data()
-    X = X.apply(lambda x: pp.clean_text(x))
-    y_encoded = pp.features_encoder(y)
 
-    X_train, X_test, y_train, y_test, X_val, y_val = pp.split_data(X, y_encoded)
+
+
+    with open('/Users/camerongallinger/code/cgallin/cover_genie/bert/clean_data/data.pkl', 'rb') as file:
+        data = pickle.load(file)
+    data = data.sample(frac=pm.SAMPLE_FRAC)
+
+    X = data["description_cleaned"]
+    y = data["label"]
+
+
+    X_train, X_test, y_train, y_test, X_val, y_val = pre_proc_linkedin.split_data(X, y)
     print("Data loaded and preprocessed")
     #define model parameters
+
+
+
+
     model = keras_hub.models.DistilBertClassifier.from_preset(
                     pm.PRE_TRAINED_MODEL_NAME,
                     preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(pm.PRE_TRAINED_MODEL_NAME,
                                                                     sequence_length=pm.SEQUENCE_LENGTH,
                                                                     name=pm.PREPROCESSOR_NAME),
-                    num_classes=pm.NUM_CLASSES)
+                                                                    num_classes=pm.NUM_CLASSES,
+                                                                    activation="softmax",
+                                                                    dropout_rate=pm.DROPOUT_RATE)
+    model.backbone.trainable = False
     #Compile the model
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
@@ -42,7 +57,7 @@ def train_model():
                          validation_data=(X_val, y_val)
                         )
     # Save the model
-    model.save(f"models/model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}")
+    model.save(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.keras")
     print("Model trained and saved")
     return {"model": model, "history": history}
 
@@ -53,4 +68,5 @@ def predict_model(model, X_test):
     return y_pred, y_prob
 
 
-train_model()
+if __name__ == "__main__":
+    train_model()

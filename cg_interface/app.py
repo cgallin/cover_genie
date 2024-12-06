@@ -31,25 +31,27 @@ location = st.multiselect(
       'Calgary', 'Ottawa', 'Edmonton', 'Winnipeg'],
      key='location')
 
-with st.form("my_form"):
-    upload = st.file_uploader('Upload your CV in PDF format: ', type=['pdf'], accept_multiple_files=False),
-    submitted = st.form_submit_button("Upload")
+user_cv = None
 
-if submitted:
-    cv_as_text = pdf_to_text(upload[0])
-    user_cv = cv_as_text
-    query_params = {
-        'job_title':job_title,
-        'location':location,
-        'industries':industries,
-        'user_cv':user_cv
-    }
+with st.form(key='upload_cv'):
+    upload = st.file_uploader('Upload your CV in PDF format: ', type=['pdf'], accept_multiple_files=False)
+    submitted = st.form_submit_button("Upload")
+    if submitted:
+        if upload is not None:
+            user_cv = upload.read()
+
+query_params = {
+    'job_title': job_title,
+    'location': location,
+    'industries': industries,
+    'user_cv': user_cv
+}
 
 if 'user_cv' not in st.session_state:
     st.session_state.user_cv = user_cv
 
 if st.button("Recommend jobs"):
-    url = ''
+    url = 'http://127.0.0.1:8000/recommend'
     prediction = requests.get(url, params=query_params).json()
     if 'prediction' not in st.session_state:
         st.session_state.prediction = prediction
