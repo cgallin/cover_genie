@@ -5,10 +5,10 @@ from nltk.corpus import stopwords
 import re
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-import params as pm
+import bert.params as pm
 
 def industry_map():
-    map = pd.read_csv("../raw_data/job_postings_data/mappings/industries.csv")
+    map = pd.read_csv("/Users/camerongallinger/code/cgallin/cover_genie/raw_data/job_postings_data/mappings/industries.csv")
     industry_map = {
     "Technology": [
         "Defense and Space Manufacturing", "Computer Hardware Manufacturing",
@@ -158,16 +158,54 @@ def industry_map():
     return map
 
 def load_data():
-    df = pd.read_csv("../raw_data/job_postings_data/postings.csv")
-    map = pd.read_csv("../raw_data/job_postings_data/mappings/industries.csv")
-    industries = pd.read_csv("../raw_data/job_postings_data/jobs/job_industries.csv")
+    df = pd.read_csv("/Users/camerongallinger/code/cgallin/cover_genie/raw_data/job_postings_data/postings.csv")
+    map = industry_map()
+    industries = pd.read_csv("/Users/camerongallinger/code/cgallin/cover_genie/raw_data/job_postings_data/jobs/job_industries.csv")
     df = df.merge(industries.merge(map,how="left", on ="industry_id").set_index("industry_id"),how="left", on ="job_id")
-    big_industries=df.industry_name.value_counts()[df.industry_name.value_counts()>3000].index.tolist()
+    big_industries=['Healthcare and Biotechnology',
+        'Technology',
+        'Manufacturing',
+        'Finance, Banking, Insurance and Accounting',
+        'Consumer Goods and Retail',
+        'Staffing and Recruiting',
+        'Hospitality, Travel, and Food Service',
+        'Education and Research',
+        'Construction and Real Estate Development',
+        'Legal and Consulting Services',
+        'Transportation and Logistics']
     df = df[df['industry_name'].isin(big_industries)]
-    df= df.dropna(subset=["description"]).sample(frac=pm.SAMPLE_FRAC)
+    df= df.dropna(subset=["description"])
     return df["description"], df["industry_name"]
 
 def clean_text(text):
+
+    sw = stopwords.words('english')
+    jpsw = [
+        "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is",
+        "it", "of", "on", "or", "that", "the", "this", "to", "with", "you", "your",
+        "we", "us", "our", "will", "can", "may", "should", "must", "if", "but",
+        "about", "above", "below", "over", "under", "after", "before", "while",
+        "during", "within", "without", "between", "so", "such", "all", "any",
+        "some", "more", "most", "each", "every", "either", "neither", "both",
+        "few", "several", "many", "other", "another", "those", "these", "there",
+        "here", "who", "whom", "whose", "which", "what", "where", "when", "how",
+        "why", "into", "onto", "upon", "through", "via", "per", "including",
+        "across", "based", "according", "looking", "responsible", "required",
+        "desired", "preferred", "qualifications", "skills", "experience",
+        "knowledge", "ability", "work", "role", "position", "job", "title",
+        "tasks", "duties", "requirements", "responsibilities", "functions",
+        "expected", "ensure", "develop", "provide", "manage", "team", "individual",
+        "company", "employer", "candidate", "applicant", "opportunity", "apply","organization","resume","resumes"
+        "years", "year", "months", "month", "days", "day", "hours", "hour",
+        # Diversity, Inclusion, and Equality Terms
+        "diversity", "diverse", "inclusive", "inclusion", "belonging", "equity",
+        "equality", "equal", "opportunity", "commitment", "underrepresented",
+        "minorities", "disability", "disabilities", "veterans", "lgbtq",
+        "accessibility", "gender", "race", "ethnicity", "background",
+        "culture", "respect", "fairness", "values", "mission", "vision",
+        "identity", "justice", "ethnic", "collaboration", "empower", "supportive"
+    ]
+    sw=sw+jpsw
 
     text = text.lower()
 
@@ -184,7 +222,7 @@ def clean_text(text):
     for p in punctuations:
         text = text.replace(p,'') #Removing punctuations
 
-    text = [word.lower() for word in text.split() if word.lower() not in stopwords.words('english')] #Removing stopwords
+    text = [word.lower() for word in text.split() if word.lower() not in sw] #Removing stopwords
 
     text = " ".join(text) #removing stopwords
 
@@ -205,6 +243,6 @@ def features_encoder(data):
     return encoder.fit_transform(data)
 
 def split_data(X,y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=pm.TRAIN_SPLIT, random_state=42)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, train_size=pm.VAL_SPLIT, random_state=42)
     return X_train, X_test, y_train, y_test, X_val, y_val
