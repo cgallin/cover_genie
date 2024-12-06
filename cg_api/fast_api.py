@@ -36,12 +36,13 @@ def generate_end(user_cv, job_descriptions):
 def recommend(job_title, location, industries, user_cv):
     ''' API end which generates job recommendations based on user input.'''
 
-    job_postings = pd.read_csv('') # change to actual complete csv when ready
+    job_postings = pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/filtered_jobs.csv') # change to actual complete csv when ready
     filtered_jobs = filter_location_and_industries(job_postings, location, industries)
 
     recommended_jobs = recommendation(user_cv,job_title, filtered_jobs, k=5)
+    # recommended_jobs = filtered_jobs[['title', 'company', 'description', 'jobProviders']].sample(5)
 
-    return recommended_jobs.to_dict(orient='records')
+    return recommended_jobs.to_dict()
 
 
 @app.get("/")
