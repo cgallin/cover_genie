@@ -10,5 +10,3 @@ df = pd.DataFrame({'description_cleaned': X, 'industry': y, 'label': y_encoded})
 
 with open('/Users/camerongallinger/code/cgallin/cover_genie/bert/clean_data/data.pkl', 'wb') as f:
     pickle.dump(df, f)
-
-print(df.shape, df.industry.nunique())

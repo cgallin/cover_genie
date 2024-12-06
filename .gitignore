@@ -168,3 +168,4 @@ notebooks/
 *.ipynb
 bert/clean_data/
 bert/models/
+api_data/
