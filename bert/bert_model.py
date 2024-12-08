@@ -23,7 +23,7 @@ def train_model():
     with open('/Users/camerongallinger/code/cgallin/cover_genie/bert/clean_data/data.pkl', 'rb') as file:
         data = pickle.load(file)
 
-    data = data.sample(frac=pm.SAMPLE_FRAC, random_state=42)
+    data = data.sample(frac=pm.SAMPLE_FRAC, random_state=pm.RANDOM_STATE)
 
     X = data["description_cleaned"]
     y = data["label"]
@@ -61,6 +61,8 @@ def train_model():
     # Save the model
     model.save(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.keras")
     print("Model trained and saved")
+    with open(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/history_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.keras", 'wb') as file_pi:
+        pickle.dump(history.history, file_pi)
     return {"model": model, "history": history}
 
 def predict_model(model, X_test):
