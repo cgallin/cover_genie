@@ -175,10 +175,11 @@ def load_data():
         'Transportation and Logistics']
     df = df[df['industry_name'].isin(big_industries)]
     df= df.dropna(subset=["description"])
+    df["description"]=df["title"]+df["company_name"]+df["description"]
     return df["description"], df["industry_name"]
 
 def clean_text(text):
-
+    text = str(text)
     sw = stopwords.words('english')
     jpsw = [
         "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is",
@@ -243,6 +244,6 @@ def features_encoder(data):
     return encoder.fit_transform(data)
 
 def split_data(X,y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=pm.TRAIN_SPLIT, random_state=42)
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, train_size=pm.VAL_SPLIT, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=pm.TRAIN_SPLIT, random_state=pm.RANDOM_STATE)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, train_size=pm.VAL_SPLIT, random_state=pm.RANDOM_STATE)
     return X_train, X_test, y_train, y_test, X_val, y_val
