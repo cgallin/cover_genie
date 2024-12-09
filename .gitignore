@@ -166,3 +166,6 @@ raw_data/
 .DS_Store
 notebooks/
 *.ipynb
+bert/clean_data/
+bert/models/
+api_data/

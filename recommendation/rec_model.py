@@ -2,10 +2,6 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-
 def recommendation(user_cv, job_title, filtered_jobs, k=5):
     """
     Recommends top k jobs for a given resume based on text similarity and retrieves job details.
