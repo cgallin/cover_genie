@@ -17,9 +17,8 @@ def filter_location_and_industries(df, location, industries):
     Filters the jobs dataframe by location and industries.
 
     """
-    filtered_df = df[df['location'] == location]
-    if industries:
-        filtered_df = filtered_df[filtered_df['industries'].isin(industries)]
+
+    filtered_df = df[(df['location'].isin(location)) & (df['industry'].isin(industries))]
     return filtered_df
 
 # Is used to preprocess the cv_text that will be inputed by the user
