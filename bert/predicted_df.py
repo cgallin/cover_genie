@@ -24,9 +24,10 @@ def predict_industry_df(data_path,model_path):
 
     with open(data_path, 'rb') as file:
         df = pickle.load(file)
-    df["description"]=df["title"]+df["compay"]+df["description"]
-    df["description_cleaned"]=df["description"].apply(pp.clean_text)
+    df["description_cleaned"]=df["title"]+" "+ df["company"]+" " +df["description"]
+    df["description_cleaned"]=df["description_cleaned"].apply(pp.clean_text)
     df["industries"]= classifier.predict(df["description_cleaned"]).argmax(axis=1)
+    df["industries"]=df["industries"].map(pm.INDUSTRY_LABELS)
     #df["industry_probs"]= classifier.predict(df["description_cleaned"])
     with open(data_path.replace(".pkl","")+"_with_predictions.pkl", 'wb') as file:
         pickle.dump(df, file)

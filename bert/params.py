@@ -22,3 +22,15 @@ CLASS_WEIGHTS = {0:1.92971879,
                 9:0.49944457,
                 10:3.52695789}
 TRAINABLE = True
+
+INDUSTRY_LABELS =  {0: 'Construction and Real Estate Development',
+ 1: 'Consumer Goods and Retail',
+ 2: 'Education and Research',
+ 3: 'Finance, Banking, Insurance and Accounting',
+ 4: 'Healthcare and Biotechnology',
+ 5: 'Hospitality, Travel, and Food Service',
+ 6: 'Legal and Consulting Services',
+ 7: 'Manufacturing',
+ 8: 'Sales, Marketing, and Recruitment',
+ 9: 'Technology',
+ 10: 'Transportation and Logistics'}
