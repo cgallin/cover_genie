@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from open_ai.prompt import generate_cover_letters
 from recommendation.rec_model import recommendation
-from recommendation.pre_proc_jobs import preprocess_text, filter_location_and_industries
+from recommendation.pre_proc_jobs import preprocessor, filter_dataframe
+from typing import List
 
 app = FastAPI()
 app.state.model = None #function to load model.
@@ -18,7 +19,7 @@ app.add_middleware(
 )
 
 @app.get("/generate")
-def generate_end(user_cv, job_descriptions):
+def generate_end(user_cv: str, job_descriptions: list):
     ''' API end which generates cover letters based on user CV and job descriptions using OpenAI API.
     Returns a dictionary with 5 cover letters. '''
 
@@ -32,25 +33,17 @@ def generate_end(user_cv, job_descriptions):
     }
     return sep_cover_letters
 
-@app.post("/recommend")
-def recommend(job_title, location, industries, user_cv):
+@app.get("/recommend")
+def recommend(job_title: str, location:str, industries: str, user_cv: str):
     ''' API end which generates job recommendations based on user input.'''
 
-<<<<<<< HEAD
-    job_postings = pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/processed_w_industries.csv') # change to actual complete csv when ready
-    filtered_jobs = filter_location_and_industries(job_postings, location, industries)
+    job_postings = pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/notebooks/jobs_api_data.csv')
+    filtered_jobs = filter_dataframe(job_postings, location, industries)
 
-    user_cv = preprocess_text(user_cv)
-    recommended_jobs = recommendation(user_cv=user_cv,job_title=job_title, filtered_jobs=filtered_jobs, k=5)
-=======
-    job_postings = pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/filtered_jobs.csv') # change to actual complete csv when ready
-    filtered_jobs = filter_location_and_industries(job_postings, location, industries)
+    user_cv = preprocessor(user_cv)
+    recommended_jobs = recommendation(user_cv_input=user_cv,job_title=job_title, filtered_jobs=filtered_jobs, k=5)
 
-    recommended_jobs = recommendation(user_cv,job_title, filtered_jobs, k=5)
-    # recommended_jobs = filtered_jobs[['title', 'company', 'description', 'jobProviders']].sample(5)
->>>>>>> 1c6c900f50e419ae9e68d2fb91aeb6a1238da7df
-
-    return recommended_jobs.to_dict()
+    return {"Job recommendations": recommended_jobs.to_dict(orient='records')}
 
 
 @app.get("/")
