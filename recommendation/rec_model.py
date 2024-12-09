@@ -16,7 +16,7 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
     - pd.DataFrame: A DataFrame containing top job recommendations with 'title', 'company_name', 'description'.
     """
     # Combine job title and user CV into one string
-    combine_input = job_title + " " + user_cv  # Combine job title and CV
+    combine_input =user_cv.append(user_cv)  # Combine job title and CV
 
     # Vectorizing the text data (using the 'combined' column)
     vectorizer = TfidfVectorizer()

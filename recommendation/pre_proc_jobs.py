@@ -5,7 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 import nltk
-
+nltk.download('punkt_tab')
 # path1 = 'raw_data/jobs_api_data.csv'
 # jobs_df = pd.read_csv(path1)
 
@@ -15,19 +15,20 @@ import nltk
 def filter_dataframe(df, location, industry):
     """
     Filters the DataFrame by location and industry.
-    
+
     Parameters:
         df (pd.DataFrame): The DataFrame to filter. Must have 'location' and 'industries' columns.
         location (str): The location to filter by.
         industry (str): The industry to filter by.
-    
+
     Returns:
         pd.DataFrame: The filtered DataFrame.
     """
     if 'location' not in df.columns or 'industries' not in df.columns:
         raise ValueError("The DataFrame must contain 'location' and 'industries' columns.")
-    
-    filtered_df = df[(df['location'] == location) & (df['industries'] == industry)]
+
+    filtered_df = df[(df['location'] == location) & ()]
+    filtered_df = filtered_df[filtered_df['industries'] == industry]
     return filtered_df
 
 
@@ -35,7 +36,7 @@ def filter_dataframe(df, location, industry):
 # Function to clean the text
 def text_cleaner(input_text):
     """
-    Cleans text by removing emojis, non-alphabetic characters (except periods), 
+    Cleans text by removing emojis, non-alphabetic characters (except periods),
     and converting to lowercase.
 
     Args:
@@ -113,4 +114,3 @@ def preprocessor(input_text):
 
 # CALL: rec = recommendation("engineer", resume, jobs_df.loc[:1000], k=5)
 # rec
-
