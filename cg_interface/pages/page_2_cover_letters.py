@@ -2,6 +2,7 @@ import streamlit as st
 import pyperclip
 
 cover_letters = st.session_state.response
+st.write(cover_letters)
 
 st.markdown(''' # Your Generated Cover Letters 🧞‍♀️''')
 

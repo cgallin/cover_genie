@@ -1,33 +1,41 @@
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import pandas as pd
 
-def recommendation(resume_text, job_texts, k=5):
+def recommendation(user_cv, job_title, filtered_jobs, k=5):
     """
-    Recommends top k jobs for a given resume based on text similarity.
+    Recommends top k jobs for a given resume based on text similarity and retrieves job details.
 
     Parameters:
-    - resume_text: A single resume description (processed).
-    - job_texts: List or Series of job descriptions (processed).
+    - user_cv: A processed resume description (string).
+    - job_title: A processed job title (string).
+    - filtered_jobs: A DataFrame containing job details with columns 'processed_title' and 'processed_description'.
     - k: Number of top job recommendations.
 
     Returns:
-    - List of tuples containing job indices and similarity scores for the top k jobs.
+    - pd.DataFrame: A DataFrame containing top job recommendations with 'title', 'company_name', 'description'.
     """
-    # Ensure inputs are in the correct format
-    if isinstance(job_texts, list):
-        job_texts = pd.Series(job_texts)
+    # Combine job title and user CV into one string
+    combine_input = job_title + " " + user_cv  # Combine job title and CV
 
-    # Vectorizing the text data
+    # Vectorizing the text data (using the 'combined' column)
     vectorizer = TfidfVectorizer()
-    job_desc_tfidf = vectorizer.fit_transform(job_texts)
-    resume_tfidf = vectorizer.transform([resume_text])  # Transform single resume
+    job_desc_tfidf = vectorizer.fit_transform(filtered_jobs['tokenized_description'])
+
+    # Vectorizing the resume input
+    resume_tfidf = vectorizer.transform([combine_input])  # Transform the combined job title + user CV
 
     # Compute the cosine similarity between the resume and all job descriptions
     tfidf_similarity_scores = cosine_similarity(job_desc_tfidf, resume_tfidf).flatten()
 
     # Find the top k most similar jobs
     top_jobs = tfidf_similarity_scores.argsort()[::-1][:k]
-    top_job_scores = [(job_idx, tfidf_similarity_scores[job_idx]) for job_idx in top_jobs]
 
-    return top_job_scores
+    # Index rows from the DataFrame and get the relevant job details
+    top_jobs_df = filtered_jobs.iloc[top_jobs][['title', 'company', 'description', 'jobProviders']]
+
+    # Return the top k job recommendations
+    return top_jobs_df
+
+
+# CALL: user_cv = preprocessor(resume)
