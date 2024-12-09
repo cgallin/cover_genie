@@ -1,32 +1,19 @@
 import streamlit as st
+from streamlit_extras.switch_page_button import switch_page
 import requests
-# from open_ai.pdf_preproc import pdf_to_text
 import json
-# import pdfplumber
 import io
-
-# def pdf_bytes_to_string(pdf_bytes: bytes) -> str:
-#     with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
-#         text = ""
-#         for page in pdf.pages:
-#             text += page.extract_text()
-#     return text
-
+import pyperclip
+import pdfplumber
 
 # User input page
 st.markdown('''# Cover Genie 🧞‍♀️''')
 st.markdown('''Please enter the following information to generate relevant job postings:''')
 
-# # Initialize variables
-# job_title = ""
-# industries = []
-# location = []
-# user_cv = None
-
 # Form for user input
 with st.form(key='upload_cv'):
     # Input fields
-    job_title = st.text_input('Enter a desired job title: ')
+    job_title = st.text_input('Enter a desired job title: ', value='Data Scientist')
     industries = st.multiselect(
         'Select the relevant industries for your job search:',
         [
@@ -41,35 +28,39 @@ with st.form(key='upload_cv'):
             'Construction and Real Estate Development',
             'Legal and Consulting Services',
             'Transportation and Logistics',
-        ]
+        ],
+        default=['Technology'],
     )
 
     location = st.multiselect(
         'Enter the desired work location:',
         ['Montreal', 'Toronto', 'Vancouver', 'Calgary', 'Ottawa', 'Edmonton', 'Winnipeg'],
+        default= ['Montreal'],
     )
-    # upload = st.file_uploader('Upload your CV in PDF format:', type=['pdf'], accept_multiple_files=False)
 
-    user_cv = st.text_area("Paste your CV here:")
-    # Ensure variables are not empty
-    # if not job_title:
-    #     st.warning("Please enter a job title.")
-    # if not industries:
-    #     st.warning("Please select at least one industry.")
-    # if not location:
-    #     st.warning("Please select at least one location.")
-
+    user_cv = st.text_area("Paste your CV here:",
+                           value= 'A naturally creative, critical, and analytical thinker, I am a resourceful, organized, and above all dedicated to my work.  Passionate about my starting career in the market research industry, I will greatly contribute to your team.')
 
     submitted = st.form_submit_button("Recommend jobs")
 
     if submitted:
         query_params = {
         'job_title': job_title,
-        'location': location if location else "",
-        'industries': industries if industries else "",
+        'location': location[0] if location else "",
+        'industries': industries[0] if industries else "",
         'user_cv': user_cv,
         }
         st.write("Query Parameters:", query_params)
+
+        # Ensure session state variables exist
+        if 'job_title' not in st.session_state:
+            st.session_state.job_title = job_title
+        if 'industries' not in st.session_state:
+            st.session_state.industries = industries
+        if 'location' not in st.session_state:
+            st.session_state.location = location
+        if 'user_cv' not in st.session_state:
+            st.session_state.user_cv = user_cv
 
         url = 'http://127.0.0.1:8000/recommend'
 
@@ -77,33 +68,8 @@ with st.form(key='upload_cv'):
         if response.status_code == 200:
             prediction = response.json()
             st.write("Job Recommendations:", prediction)
+            if 'prediction' not in st.session_state:
+                st.session_state.prediction = prediction
+            switch_page("page_1_job_postings")
         else:
             st.error(f"Failed to fetch recommendations: {response.status_code}")
-
-        # else:
-        #     st.info("Please upload your CV and fill in the required fields before recommending jobs.")
-
-        # if upload is not None:
-        #     # with open(upload.name, mode='wb') as w:
-        #     #     w.write(upload.getvalue())
-        #     # byte_pdf = upload.read()
-        #     # user_cv = pdf_bytes_to_string(byte_pdf)
-        #     st.success("CV uploaded successfully!")
-        # else:
-        #     st.error("Please upload a valid PDF file.")
-        #     byte_pdf = upload.read()
-        #     # user_cv = pdf_to_text(byte_pdf)
-        #     user_cv = pdf_bytes_to_string(byte_pdf)
-
-
-        # Build query parameters
-
-
-    # # Display query parameters for debugging
-    # st.write("Query Parameters:", query_params)
-
-    # Recommend jobs button
-# params = json.dumps(query_params)
-
-# if 'user_cv' not in st.session_state:
-#     st.session_state.user_cv = user_cv

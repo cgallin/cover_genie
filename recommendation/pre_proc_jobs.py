@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 import nltk
+from bert.pre_proc_linkedin import clean_text
 
 # path1 = 'raw_data/jobs_api_data.csv'
 # jobs_df = pd.read_csv(path1)
@@ -91,7 +92,7 @@ def tokenize(text):
         # Extend the tokenized_words list
         tokenized_words.extend(lemmatized_words)
 
-    return tokenized_words
+    return " ".join(tokenized_words)
 
 # CALL: filtered_df = filter_dataframe(jobs_df, "Toronto", "Technology")
 

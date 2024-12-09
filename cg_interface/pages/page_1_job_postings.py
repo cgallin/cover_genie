@@ -1,43 +1,22 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 import requests
-from open_ai.pdf_preproc import pdf_to_text
-
-# Function to unpack the prediction from the API?
-
-
-# for prediction in st.session_state.prediction:
-#     st.write(prediction.values)
-
-# for the_values in st.session_state.prediction.values():
-#     st.write(the_values)
-
-# recommended_jobs = st.session_state.prediction
-# st.write(recommended_jobs)
+import pyperclip
 
 st.markdown(''' # Recommended Job Postings 🧞‍♀️''')
 
-with st.expander("# Job title - Company"):
-    job_des_1 = st.write(''' Job description ... ''')
-    st.write(''' url ''')
+api_output = st.session_state.prediction
 
-with st.expander("# Job title - Company"):
-    job_des_2 = st.write(''' Job description ... ''')
-    st.write(''' url ''')
+job_recommendations = api_output['Job recommendations']
 
-with st.expander("# Job title - Company"):
-    job_des_3 = st.write(''' Job description ... ''')
-    st.write(''' url ''')
+job_descriptions = []
 
-with st.expander("# Job title - Company"):
-    job_des_4 = st.write(''' Job description ... ''')
-    st.write(''' url ''')
 
-with st.expander("# Job title - Company"):
-    job_des_5 = st.write(''' Job description ... ''')
-    st.write(''' url ''')
-
-job_descriptions = [job_des_1, job_des_2, job_des_3, job_des_4, job_des_5]
+for item in job_recommendations:
+    with st.expander(f"{item['title']} - {item['company']}"):
+        st.write(f"{item['description']}")
+        st.write(f"{item['jobProviders']}")
+        job_descriptions.append(item['description'])
 
 params = {
     'user_cv': st.session_state.user_cv,
