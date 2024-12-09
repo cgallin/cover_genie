@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+<<<<<<< HEAD
 import json
 # import pdfplumber
 import io
@@ -13,6 +14,19 @@ import io
 #         for page in pdf.pages:
 #             text += page.extract_text()
 #     return text
+=======
+from open_ai.pdf_preproc import pdf_to_text
+import json
+import pdfplumber
+import io
+
+def pdf_bytes_to_string(pdf_bytes: bytes) -> str:
+    with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+        text = ""
+        for page in pdf.pages:
+            text += page.extract_text()
+    return text
+>>>>>>> 1c6c900f50e419ae9e68d2fb91aeb6a1238da7df
 
 
 # User input page
@@ -54,6 +68,7 @@ with st.form(key='upload_cv'):
 
     if submitted:
         if upload is not None:
+<<<<<<< HEAD
             # with open(upload.name, mode='wb') as w:
             #     w.write(upload.getvalue())
             # byte_pdf = upload.read()
@@ -61,6 +76,11 @@ with st.form(key='upload_cv'):
             st.success("CV uploaded successfully!")
         else:
             st.error("Please upload a valid PDF file.")
+=======
+            byte_pdf = upload.read()
+            # user_cv = pdf_to_text(byte_pdf)
+            user_cv = pdf_bytes_to_string(byte_pdf)
+>>>>>>> 1c6c900f50e419ae9e68d2fb91aeb6a1238da7df
 
 # Ensure variables are not empty
 if not job_title:
@@ -70,6 +90,7 @@ if not industries:
 if not location:
     st.warning("Please select at least one location.")
 
+<<<<<<< HEAD
 # Build query parameters
 if user_cv:
     query_params = {
@@ -83,8 +104,15 @@ if user_cv:
     # st.write("Query Parameters:", query_params)
 
     # Recommend jobs button
+=======
+params = json.dumps(query_params)
+
+if 'user_cv' not in st.session_state:
+    st.session_state.user_cv = user_cv
+>>>>>>> 1c6c900f50e419ae9e68d2fb91aeb6a1238da7df
 
     url = 'http://127.0.0.1:8000/recommend'
+<<<<<<< HEAD
     try:
         response = requests.post(url, params=json.dumps(query_params))
         if response.status_code == 200:
@@ -183,3 +211,10 @@ else:
 #     # if 'prediction' not in st.session_state:
 #     #     st.session_state.prediction = prediction
 #     # switch_page("page_1_job_postings")
+=======
+    prediction = requests.get(url, params=params).json()
+    st.write(prediction)
+    # if 'prediction' not in st.session_state:
+    #     st.session_state.prediction = prediction
+    # switch_page("page_1_job_postings")
+>>>>>>> 1c6c900f50e419ae9e68d2fb91aeb6a1238da7df
