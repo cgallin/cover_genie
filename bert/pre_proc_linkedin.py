@@ -181,6 +181,7 @@ def load_data():
 def clean_text(text):
     text = str(text)
     sw = stopwords.words('english')
+    swf = stopwords.words('french')
     jpsw = [
         "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is",
         "it", "of", "on", "or", "that", "the", "this", "to", "with", "you", "your",
@@ -206,7 +207,7 @@ def clean_text(text):
         "culture", "respect", "fairness", "values", "mission", "vision",
         "identity", "justice", "ethnic", "collaboration", "empower", "supportive"
     ]
-    sw=sw+jpsw
+    sw=sw+jpsw+swf
 
     text = text.lower()
 
