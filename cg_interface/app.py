@@ -38,8 +38,7 @@ with st.form(key='upload_cv'):
         default= ['Montreal'],
     )
 
-    user_cv = st.text_area("Paste your CV here:",
-                           value= 'A naturally creative, critical, and analytical thinker, I am a resourceful, organized, and above all dedicated to my work.  Passionate about my starting career in the market research industry, I will greatly contribute to your team.')
+    user_cv = st.text_area("Paste your CV here:")
 
     submitted = st.form_submit_button("Recommend jobs")
 
@@ -67,7 +66,6 @@ with st.form(key='upload_cv'):
         response = requests.get(url, params=query_params)
         if response.status_code == 200:
             prediction = response.json()
-            st.write("Job Recommendations:", prediction)
             if 'prediction' not in st.session_state:
                 st.session_state.prediction = prediction
             switch_page("page_1_job_postings")
