@@ -5,7 +5,12 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 import nltk
+<<<<<<< HEAD
 nltk.download('punkt_tab')
+=======
+from bert.pre_proc_linkedin import clean_text
+
+>>>>>>> 91dc269ff0472afe356b1d84f3629cefc75b98e4
 # path1 = 'raw_data/jobs_api_data.csv'
 # jobs_df = pd.read_csv(path1)
 
@@ -27,8 +32,12 @@ def filter_dataframe(df, location, industry):
     if 'location' not in df.columns or 'industries' not in df.columns:
         raise ValueError("The DataFrame must contain 'location' and 'industries' columns.")
 
+<<<<<<< HEAD
     filtered_df = df[(df['location'] == location) & ()]
     filtered_df = filtered_df[filtered_df['industries'] == industry]
+=======
+    filtered_df = df[(df['location'] == location) & (df['industries'] == industry)]
+>>>>>>> 91dc269ff0472afe356b1d84f3629cefc75b98e4
     return filtered_df
 
 
@@ -92,7 +101,7 @@ def tokenize(text):
         # Extend the tokenized_words list
         tokenized_words.extend(lemmatized_words)
 
-    return tokenized_words
+    return " ".join(tokenized_words)
 
 # CALL: filtered_df = filter_dataframe(jobs_df, "Toronto", "Technology")
 

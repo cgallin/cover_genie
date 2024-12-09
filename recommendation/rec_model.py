@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def recommendation(user_cv, job_title, filtered_jobs, k=5):
+def recommendation(user_cv_input, job_title, filtered_jobs, k=5):
     """
     Recommends top k jobs for a given resume based on text similarity and retrieves job details.
 
@@ -16,7 +16,12 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
     - pd.DataFrame: A DataFrame containing top job recommendations with 'title', 'company_name', 'description'.
     """
     # Combine job title and user CV into one string
+<<<<<<< HEAD
     combine_input =user_cv.append(user_cv)  # Combine job title and CV
+=======
+    combine_input = job_title + " " + user_cv_input # Combine job title and CV
+    print(type(combine_input))
+>>>>>>> 91dc269ff0472afe356b1d84f3629cefc75b98e4
 
     # Vectorizing the text data (using the 'combined' column)
     vectorizer = TfidfVectorizer()
@@ -24,7 +29,6 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
 
     # Vectorizing the resume input
     resume_tfidf = vectorizer.transform([combine_input])  # Transform the combined job title + user CV
-
     # Compute the cosine similarity between the resume and all job descriptions
     tfidf_similarity_scores = cosine_similarity(job_desc_tfidf, resume_tfidf).flatten()
 
@@ -36,6 +40,9 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
 
     # Return the top k job recommendations
     return top_jobs_df
+<<<<<<< HEAD
 
 
 # CALL: user_cv = preprocessor(resume)
+=======
+>>>>>>> 91dc269ff0472afe356b1d84f3629cefc75b98e4
