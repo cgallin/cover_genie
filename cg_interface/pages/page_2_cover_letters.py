@@ -1,10 +1,17 @@
 import streamlit as st
 import pyperclip
 
-cover_letters = st.session_state.response
+cover_letters = st.session_state.pred
 st.write(cover_letters)
 
 st.markdown(''' # Your Generated Cover Letters 🧞‍♀️''')
+
+
+# for item in job_recommendations:
+#     with st.expander(f"{item['title']} - {item['company']}"):
+#         st.write(f"{item['description']}")
+#         st.write(f"{item['jobProviders']}")
+#         job_descriptions.append(item['description'])
 
 with st.expander("# Job title - Company"):
     cover_1 = st.write(''' Cover letter text ... ''')

@@ -1,8 +1,9 @@
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
+import os
 
-API_KEY = 1
+API_KEY = os.environ.get('API_KEY')
 # Define the function
 def generate_cover_letters(user_cv, job_descriptions):
     """
@@ -30,7 +31,7 @@ def generate_cover_letters(user_cv, job_descriptions):
         You are a professional career counselor. Write a customized cover letter based on the following:
 
         - **Candidate's CV**:
-        {cv_text}
+        {user_cv}
 
         - **Job Description**:
         {job_description}
