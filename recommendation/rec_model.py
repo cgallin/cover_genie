@@ -18,12 +18,9 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
     # Combine job title and user CV into one string
     combine_input = job_title + " " + user_cv  # Combine job title and CV
 
-    # Create the 'combined' column in filtered_jobs by merging 'processed_title' and 'processed_description'
-    filtered_jobs['combined'] = filtered_jobs['processed_title'] + " " + filtered_jobs['processed_description']
-
     # Vectorizing the text data (using the 'combined' column)
     vectorizer = TfidfVectorizer()
-    job_desc_tfidf = vectorizer.fit_transform(filtered_jobs['combined'])
+    job_desc_tfidf = vectorizer.fit_transform(filtered_jobs['tokenized_description'])
 
     # Vectorizing the resume input
     resume_tfidf = vectorizer.transform([combine_input])  # Transform the combined job title + user CV
@@ -39,3 +36,6 @@ def recommendation(user_cv, job_title, filtered_jobs, k=5):
 
     # Return the top k job recommendations
     return top_jobs_df
+
+
+# CALL: user_cv = preprocessor(resume)
