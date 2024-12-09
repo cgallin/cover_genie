@@ -49,7 +49,7 @@ with st.form(key='upload_cv'):
         'industries': industries[0] if industries else "",
         'user_cv': user_cv,
         }
-        st.write("Query Parameters:", query_params)
+        # st.write("Query Parameters:", query_params)
 
         # Ensure session state variables exist
         if 'job_title' not in st.session_state:
