@@ -61,7 +61,7 @@ def train_model():
     # Save the model
     model.save(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/model_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.keras")
     print("Model trained and saved")
-    with open(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/history_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.keras", 'wb') as file_pi:
+    with open(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/history_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.pkl", 'wb') as file_pi:
         pickle.dump(history.history, file_pi)
     return {"model": model, "history": history}
 
