@@ -1,43 +1,24 @@
 import streamlit as st
 import pyperclip
 
-cover_letters = st.session_state.response
-st.write(cover_letters)
+# Check if cover letters are available
+if 'pred' not in st.session_state or not st.session_state.pred:
+    st.error("No cover letters found! Please go back and generate cover letters first.")
+else:
+    cover_letters = st.session_state.pred['Cover letters']
 
-st.markdown(''' # Your Generated Cover Letters 🧞‍♀️''')
+    st.markdown('''# Your Generated Cover Letters 🧞‍♀️''')
 
-with st.expander("# Job title - Company"):
-    cover_1 = st.write(''' Cover letter text ... ''')
-    st.write(''' Here is the {url} to apply to this job.''')
-    if st.button('Copy Cover Letter', key='copy_1'):
-        pyperclip.copy(cover_1)
-        st.success('Text copied successfully!')
+    # Display each cover letter dynamically in expanders
+    for i, (key, cover_letter) in enumerate(cover_letters.items(), start=1):
+        with st.expander(f"Cover Letter {i}"):
+            st.write(cover_letter)
+            # Copy button for each cover letter
+            if st.button(f"Copy Cover Letter {i}", key=f'copy_{i}'):
+                pyperclip.copy(cover_letter)
+                st.success(f"Cover Letter {i} copied successfully!")
 
+    st.markdown("### Apply to Jobs")
+    # Placeholder for future job application links
+    st.write("Here you can provide application links for each job.")
 
-with st.expander("# Job title - Company"):
-    cover_2 = st.write(''' Cover letter ... ''')
-    st.write(''' Here is the {url} to apply to this job.''')
-    if st.button('Copy Cover Letter', key='copy_2'):
-        pyperclip.copy(cover_1)
-        st.success('Text copied successfully!')
-
-with st.expander("# Job title - Company"):
-    cover_3 = st.write(''' Cover letter... ''')
-    st.write(''' Here is the {url} to apply to this job.''')
-    if st.button('Copy Cover Letter', key='copy_3'):
-        pyperclip.copy(cover_1)
-        st.success('Text copied successfully!')
-
-with st.expander("# Job title - Company"):
-    cover_4 = st.write(''' Cover letter ... ''')
-    st.write(''' Here is the {url} to apply to this job.''')
-    if st.button('Copy Cover Letter', key='copy_4'):
-        pyperclip.copy(cover_1)
-        st.success('Text copied successfully!')
-
-with st.expander("# Job title - Company"):
-    cover_5 = st.write(''' Cover letter ... ''')
-    st.write(''' Here is the {url} to apply to this job.''')
-    if st.button('Copy Cover Letter', key='copy_5'):
-        pyperclip.copy(cover_1)
-        st.success('Text copied successfully!')

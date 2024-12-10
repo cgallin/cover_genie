@@ -1,36 +1,39 @@
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
+from concurrent.futures import ThreadPoolExecutor
+import os
 
-API_KEY = 1
-# Define the function
+
+
+
 def generate_cover_letters(user_cv, job_descriptions):
     """
-    Generate customized cover letters based on a resume PDF and a list of job descriptions.
+    Generate customized cover letters in parallel based on a CV and a list of job descriptions.
 
     Args:
-        user_cv: Input the text that is extracted from the users cv.
-        job_descriptions (list): A list each containing 'job_description'.
+        user_cv: Input text extracted from the user's CV.
+        job_descriptions (list): A list of job descriptions.
 
     Returns:
         list: A list of cover letters.
     """
 
-    # Step 2: Set up the OpenAI API and LLM
+    # Set up the OpenAI LLM
     llm = OpenAI(
-        openai_api_key=API_KEY,
+        openai_api_key="one-love",
         temperature=0.7,
         max_tokens=800
     )
 
-    # Step 3: Create the PromptTemplate
+    # Create the PromptTemplate
     cover_letter_prompt = PromptTemplate(
         input_variables=["user_cv", "job_description"],
-        template="""
+        template="""\
         You are a professional career counselor. Write a customized cover letter based on the following:
 
         - **Candidate's CV**:
-        {cv_text}
+        {user_cv}
 
         - **Job Description**:
         {job_description}
@@ -44,16 +47,18 @@ def generate_cover_letters(user_cv, job_descriptions):
         """
     )
 
-    # Step 4: Set up the chain
+    # Set up the chain
     cover_letter_chain = LLMChain(
         llm=llm,
         prompt=cover_letter_prompt
     )
 
-    # Step 5: Generate cover letters for each job description
-    cover_letters = []
-    for job_description in job_descriptions:
-        cover_letter = cover_letter_chain.run(user_cv=user_cv, job_description=job_description)
-        cover_letters.append(cover_letter)
+    # Function to generate a single cover letter
+    def generate_single_cover_letter(job_description):
+        return cover_letter_chain.run(user_cv=user_cv, job_description=job_description)
+
+    # Generate cover letters in parallel
+    with ThreadPoolExecutor() as executor:
+        cover_letters = list(executor.map(generate_single_cover_letter, job_descriptions))
 
     return cover_letters

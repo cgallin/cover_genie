@@ -5,47 +5,61 @@ from open_ai.prompt import generate_cover_letters
 from recommendation.rec_model import recommendation
 from recommendation.pre_proc_jobs import preprocessor, filter_dataframe
 from typing import List
+import json
 
 app = FastAPI()
-app.state.model = None #function to load model.
+app.state.model = None  # Placeholder for model loading
 
-# Allowing all middleware is optional, but good practice for dev purposes
+# Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],  # Allow all origins for dev purposes
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 @app.get("/generate")
-def generate_end(user_cv: str, job_descriptions: list):
-    ''' API end which generates cover letters based on user CV and job descriptions using OpenAI API.
-    Returns a dictionary with 5 cover letters. '''
+def generate_end(user_cv: str, job_descriptions: str):
+    """
+    API endpoint to generate cover letters based on user CV and job descriptions using OpenAI API.
+    Returns a dictionary with cover letters.
+    """
+    try:
+        # Parse the incoming job descriptions (expects JSON list as string)
+        job_descriptions_list = json.loads(job_descriptions)
 
-    cover_letters = generate_cover_letters(user_cv, job_descriptions)
-    sep_cover_letters = {
-        "cover_letter_1": cover_letters[0],
-        "cover_letter_2": cover_letters[1],
-        "cover_letter_3": cover_letters[2],
-        "cover_letter_4": cover_letters[3],
-        "cover_letter_5": cover_letters[4]
-    }
-    return sep_cover_letters
+        # Call the parallelized generate_cover_letters function
+        cover_letters = generate_cover_letters(user_cv, job_descriptions_list)
+
+        # Structure the cover letters into a dictionary
+        sep_cover_letters = {
+            f"cover_letter_{i+1}": cover_letter for i, cover_letter in enumerate(cover_letters)
+        }
+
+        return {'Cover letters': sep_cover_letters}
+    except json.JSONDecodeError:
+        return {"error": "Invalid format for job_descriptions. Expected JSON string of list."}
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/recommend")
-def recommend(job_title: str, location:str, industries: str, user_cv: str):
-    ''' API end which generates job recommendations based on user input.'''
-
-    job_postings = pd.read_csv('/Users/juliagreenwood/code/cgallin/cover_genie/notebooks/jobs_api_data.csv')
+def recommend(job_title: str, location: str, industries: str, user_cv: str):
+    """
+    API endpoint to generate job recommendations based on user input.
+    """
+    job_postings = pd.read_csv('raw_data/job_postings_large/jobs_data.csv')
     filtered_jobs = filter_dataframe(job_postings, location, industries)
 
     user_cv = preprocessor(user_cv)
-    recommended_jobs = recommendation(user_cv_input=user_cv,job_title=job_title, filtered_jobs=filtered_jobs, k=5)
+    recommended_jobs = recommendation(user_cv_input=user_cv, job_title=job_title, filtered_jobs=filtered_jobs, k=5)
 
     return {"Job recommendations": recommended_jobs.to_dict(orient='records')}
 
-
 @app.get("/")
 def read_root():
+    """
+    Root endpoint for health check.
+    """
     return {"Hello": "World"}
+
