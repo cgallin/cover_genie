@@ -61,4 +61,3 @@ else:
                         st.error(f"Failed to fetch cover letters: {response.status_code}")
                 except Exception as e:
                     st.error(f"Failed to encode job descriptions: {e}")
-
