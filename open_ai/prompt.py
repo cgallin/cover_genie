@@ -7,6 +7,8 @@ import os
 
 
 
+
+
 def generate_cover_letters(user_cv, job_descriptions):
     """
     Generate customized cover letters in parallel based on a CV and a list of job descriptions.

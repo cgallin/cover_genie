@@ -6,7 +6,8 @@ import json  # Import JSON module for encoding job_descriptions
 
 # Ensure session state variables exist
 if 'pred' not in st.session_state:
-    st.session_state.pred = None
+    pred = None
+    st.session_state.pred = pred
 
 st.markdown(''' # Recommended Job Postings 🧞‍♀️''')
 
@@ -49,7 +50,9 @@ else:
 
                     if response.status_code == 200:
                         try:
-                            st.session_state.pred = response.json()
+                            pred = response.json()
+                            st.session_state.pred = pred
+
                             st.success("Cover letters generated!")
                             switch_page("page_2_cover_letters")
                         except Exception as e:
@@ -58,6 +61,7 @@ else:
                         st.error(f"Failed to fetch cover letters: {response.status_code}")
                 except Exception as e:
                     st.error(f"Failed to encode job descriptions: {e}")
+<<<<<<< Updated upstream
 
     # Display generated cover letters
     if st.session_state.pred:
@@ -69,3 +73,5 @@ else:
                 pyperclip.copy(cover_letter)
                 st.success(f"Cover Letter {i} copied to clipboard!")
 
+=======
+>>>>>>> Stashed changes
