@@ -4,7 +4,7 @@ COPY requirements.txt /requirements.txt
 COPY raw_data/jobs_data.csv /raw_data/jobs_data.csv
 COPY cg_interface /cg_interface
 COPY cg_api /cg_api
-COPY openapi /openapi
+COPY open_ai /open_ai
 COPY recommendation /recommendation
 
 RUN pip install --upgrade pip

@@ -58,13 +58,3 @@ else:
                         st.error(f"Failed to fetch cover letters: {response.status_code}")
                 except Exception as e:
                     st.error(f"Failed to encode job descriptions: {e}")
-
-    # Display generated cover letters
-    if st.session_state.pred:
-        st.write("### Cover Letters")
-        for i, (key, cover_letter) in enumerate(st.session_state.pred['Cover letters'].items(), start=1):
-            with st.expander(f"Cover Letter {i}"):
-                st.write(cover_letter)
-            if st.button(f"Copy Cover Letter {i} to Clipboard", key=f'copy_{i}'):
-                pyperclip.copy(cover_letter)
-                st.success(f"Cover Letter {i} copied to clipboard!")
