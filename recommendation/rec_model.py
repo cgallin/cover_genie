@@ -16,6 +16,7 @@ def recommendation(user_cv_input, job_title, filtered_jobs, k=5):
     - pd.DataFrame: A DataFrame containing top job recommendations with 'title', 'company_name', 'description'.
     """
     # Combine job title and user CV into one string
+     # Combine job title and CV
     combine_input = job_title + " " + user_cv_input # Combine job title and CV
     print(type(combine_input))
 
@@ -36,3 +37,6 @@ def recommendation(user_cv_input, job_title, filtered_jobs, k=5):
 
     # Return the top k job recommendations
     return top_jobs_df
+
+
+# CALL: user_cv = preprocessor(resume)

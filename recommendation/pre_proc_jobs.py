@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 import nltk
+nltk.download('punkt_tab')
 from bert.pre_proc_linkedin import clean_text
 
 # path1 = 'raw_data/jobs_api_data.csv'
@@ -28,6 +29,7 @@ def filter_dataframe(df, location, industries):
 
     if 'location' not in df.columns or 'industries' not in df.columns:
         raise ValueError("The DataFrame must contain 'location' and 'industries' columns.")
+
 
     # Ensure locations and industries are lists
     if not isinstance(location, list):
