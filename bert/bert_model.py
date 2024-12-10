@@ -22,20 +22,17 @@ def train_model():
     # Load cleaned data
     with open('/Users/camerongallinger/code/cgallin/cover_genie/bert/clean_data/data.pkl', 'rb') as file:
         data = pickle.load(file)
-
+    # Sample a fraction of the data if needed
     data = data.sample(frac=pm.SAMPLE_FRAC, random_state=pm.RANDOM_STATE)
-
+    #select features and target
     X = data["description_cleaned"]
     y = data["label"]
 
-
+    # Split the data
     X_train, X_test, y_train, y_test, X_val, y_val = pre_proc_linkedin.split_data(X, y)
     print("Data loaded and preprocessed")
+
     #define model parameters
-
-
-
-
     model = keras_hub.models.DistilBertClassifier.from_preset(
                     pm.PRE_TRAINED_MODEL_NAME,
                     preprocessor = keras_hub.models.DistilBertPreprocessor.from_preset(pm.PRE_TRAINED_MODEL_NAME,
@@ -44,7 +41,7 @@ def train_model():
                                                                     num_classes=pm.NUM_CLASSES,
                                                                     activation="softmax",
                                                                     dropout_rate=pm.DROPOUT_RATE)
-    model.backbone.trainable = pm.TRAINABLE
+    model.backbone.trainable = pm.TRAINABLE # set the backbone to be trainable or not
     #Compile the model
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
@@ -64,6 +61,7 @@ def train_model():
     with open(f"/Users/camerongallinger/code/cgallin/cover_genie/bert/models/history_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.pkl", 'wb') as file_pi:
         pickle.dump(history.history, file_pi)
     return {"model": model, "history": history}
+
 
 def predict_model(model, X_test):
     # Predict the model

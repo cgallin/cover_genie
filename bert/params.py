@@ -1,3 +1,5 @@
+#Parameters for the BERT model
+
 RANDOM_STATE = 42
 SEQUENCE_LENGTH = 300
 BATCH_SIZE = 32
@@ -10,6 +12,7 @@ PREPROCESSOR_NAME = "distil_bert_base_en"
 NUM_CLASSES = 11
 SAMPLE_FRAC = 1
 DROPOUT_RATE = 0.3
+#Class weights for the imbalanceed full daataset
 CLASS_WEIGHTS = {0:1.92971879,
                  1:0.93211113,
                  2:1.84661667,
@@ -21,8 +24,9 @@ CLASS_WEIGHTS = {0:1.92971879,
                 8:1.47934985,
                 9:0.49944457,
                 10:3.52695789}
+#Whether to train the backbone of the model
 TRAINABLE = True
-
+#Labels for the industries
 INDUSTRY_LABELS =  {0: 'Construction and Real Estate Development',
  1: 'Consumer Goods and Retail',
  2: 'Education and Research',
