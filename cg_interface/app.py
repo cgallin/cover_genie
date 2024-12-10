@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 import requests
 import pdfplumber
+import streamlit_themes as st_theme
 
 # User input page
 st.markdown('''# Cover Genie 🧞‍♀️''')
