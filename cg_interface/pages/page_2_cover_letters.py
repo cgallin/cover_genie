@@ -5,7 +5,8 @@ import pyperclip
 if 'pred' not in st.session_state or not st.session_state.pred:
     st.error("No cover letters found! Please go back and generate cover letters first.")
 else:
-    cover_letters = st.session_state.pred['Cover letters']  #['Cover letters']
+    st.write(st.session_state.pred.keys())
+    cover_letters = st.session_state.pred['Cover letters']
 
     api_output = st.session_state.get('prediction', None)
     job_recommendations = api_output['Job recommendations']

@@ -6,7 +6,6 @@ from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 import nltk
 nltk.download('punkt_tab')
-from bert.pre_proc_linkedin import clean_text
 
 # path1 = 'raw_data/jobs_api_data.csv'
 # jobs_df = pd.read_csv(path1)
