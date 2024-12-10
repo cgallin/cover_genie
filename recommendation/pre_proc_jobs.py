@@ -14,7 +14,7 @@ from bert.pre_proc_linkedin import clean_text
 # path2 = "raw_data/marketing-resume-example.pdf"
 # resume = pdf_to_text(path2)
 
-def filter_dataframe(df, location, industry):
+def filter_dataframe(df, location, industries):
     """
     Filters the DataFrame by location and industry.
 
@@ -26,11 +26,20 @@ def filter_dataframe(df, location, industry):
     Returns:
         pd.DataFrame: The filtered DataFrame.
     """
+
     if 'location' not in df.columns or 'industries' not in df.columns:
         raise ValueError("The DataFrame must contain 'location' and 'industries' columns.")
 
-    filtered_df = df[(df['location'] == location)]
-    filtered_df = filtered_df[filtered_df['industries'] == industry]
+
+    # Ensure locations and industries are lists
+    if not isinstance(location, list):
+        raise TypeError("The 'locations' parameter must be a list.")
+    if not isinstance(industries, list):
+        raise TypeError("The 'industries' parameter must be a list.")
+
+    # Filter the DataFrame by matching locations and industries
+    filtered_df = df[df['location'].isin(location)]
+    filtered_df = filtered_df[filtered_df['industries'].isin(industries)]
 
     return filtered_df
 

@@ -1,11 +1,12 @@
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from open_ai.prompt import generate_cover_letters
 from recommendation.rec_model import recommendation
 from recommendation.pre_proc_jobs import preprocessor, filter_dataframe
-from typing import List
+from typing import List, Annotated
 import json
+
 
 app = FastAPI()
 app.state.model = None  # Placeholder for model loading
@@ -44,11 +45,16 @@ def generate_end(user_cv: str, job_descriptions: str):
         return {"error": str(e)}
 
 @app.get("/recommend")
-def recommend(job_title: str, location: str, industries: str, user_cv: str):
+async def recommend(
+    job_title: str,
+    user_cv: str,
+    location: Annotated[List[str]|None,Query()]=None,
+    industries: Annotated[List[str]|None,Query()]=None):
     """
     API endpoint to generate job recommendations based on user input.
     """
-    job_postings = pd.read_csv('raw_data/job_postings_large/jobs_data.csv')
+
+    job_postings = pd.read_csv('raw_data/jobs_data.csv')
     filtered_jobs = filter_dataframe(job_postings, location, industries)
 
     user_cv = preprocessor(user_cv)
@@ -56,10 +62,10 @@ def recommend(job_title: str, location: str, industries: str, user_cv: str):
 
     return {"Job recommendations": recommended_jobs.to_dict(orient='records')}
 
+
 @app.get("/")
 def read_root():
     """
     Root endpoint for health check.
     """
     return {"Hello": "World"}
-

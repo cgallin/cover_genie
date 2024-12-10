@@ -68,4 +68,3 @@ else:
             if st.button(f"Copy Cover Letter {i} to Clipboard", key=f'copy_{i}'):
                 pyperclip.copy(cover_letter)
                 st.success(f"Cover Letter {i} copied to clipboard!")
-
