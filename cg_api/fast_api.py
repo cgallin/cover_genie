@@ -54,7 +54,9 @@ async def recommend(
     API endpoint to generate job recommendations based on user input.
     """
 
+
     job_postings = pd.read_csv('raw_data/jobs_data.csv')
+
     filtered_jobs = filter_dataframe(job_postings, location, industries)
 
     user_cv = preprocessor(user_cv)
