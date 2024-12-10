@@ -32,6 +32,7 @@ def generate_cover_letters(user_cv, job_descriptions):
         You are a professional career counselor.
         Write a customized cover letter from the perspective of the applicant whose CV has been inputted based on the following,
         refer to the education and experience in the cv to tailor it to the job description.
+        Please leave the name and address blank to be filled in by the user later
 
         - **Candidate's CV**:
         {user_cv}
