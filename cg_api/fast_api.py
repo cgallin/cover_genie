@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 @app.get("/generate")
-def generate_end(user_cv: str, job_descriptions: list):
+def generate_end(user_cv: str, job_descriptions: str):
     ''' API end which generates cover letters based on user CV and job descriptions using OpenAI API.
     Returns a dictionary with 5 cover letters. '''
 
@@ -31,7 +31,7 @@ def generate_end(user_cv: str, job_descriptions: list):
         "cover_letter_4": cover_letters[3],
         "cover_letter_5": cover_letters[4]
     }
-    return sep_cover_letters
+    return {'Cover letters': sep_cover_letters}
 
 @app.get("/recommend")
 def recommend(job_title: str, location:str, industries: str, user_cv: str):
