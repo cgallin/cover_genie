@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 import requests
 import pdfplumber
+import streamlit_themes as st_theme
 
 # User input page
 st.markdown('''# Cover Genie 🧞‍♀️''')
@@ -10,7 +11,7 @@ st.markdown('''Please enter the following information to generate relevant job p
 # Form for user input
 with st.form(key='upload_cv'):
     # Input fields
-    job_title = st.text_input('Enter a desired job title: ', value='Data Scientist')
+    job_title = st.text_input('Enter a desired job title: ')
 
     industries = st.multiselect(
         'Select the relevant industries for your job search:',
@@ -26,14 +27,11 @@ with st.form(key='upload_cv'):
             'Construction and Real Estate Development',
             'Legal and Consulting Services',
             'Transportation and Logistics',
-        ],
-        default=['Technology'],
-    )
+        ])
 
     location = st.multiselect(
         'Enter the desired work location:',
-        ['Montreal', 'Toronto', 'Vancouver', 'Calgary', 'Ottawa', 'Edmonton', 'Winnipeg'],
-        default=['Montreal'],
+        ['Montreal', 'Toronto', 'Vancouver', 'Calgary', 'Ottawa', 'Edmonton', 'Winnipeg']
     )
 
     # Upload CV as PDF
@@ -54,10 +52,10 @@ with st.form(key='upload_cv'):
 
     if submitted and user_cv:
         query_params = {
-            'job_title': job_title,
-            'location': location[0] if location else "",
-            'industries': industries[0] if industries else "",
-            'user_cv': user_cv,
+            'job_title': str(job_title),
+            'location': list(location) if location else "",
+            'industries': list(industries) if industries else "",
+            'user_cv': str(user_cv),
         }
 
         # Ensure session state variables exist
@@ -82,4 +80,3 @@ with st.form(key='upload_cv'):
             st.error(f"Failed to fetch recommendations: {response.status_code}")
     elif submitted and not user_cv:
         st.error("Please upload a valid CV PDF to proceed.")
-

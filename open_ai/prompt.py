@@ -4,8 +4,7 @@ from langchain.llms import OpenAI
 from concurrent.futures import ThreadPoolExecutor
 import os
 
-
-
+API_KEY = os.getenv("API_KEY")
 
 
 
@@ -23,7 +22,7 @@ def generate_cover_letters(user_cv, job_descriptions):
 
     # Set up the OpenAI LLM
     llm = OpenAI(
-        openai_api_key="one-love",
+        openai_api_key=API_KEY,
         temperature=0.7,
         max_tokens=800
     )
@@ -32,7 +31,10 @@ def generate_cover_letters(user_cv, job_descriptions):
     cover_letter_prompt = PromptTemplate(
         input_variables=["user_cv", "job_description"],
         template="""\
-        You are a professional career counselor. Write a customized cover letter based on the following:
+        You are a professional career counselor.
+        Write a customized cover letter from the perspective of the applicant whose CV has been inputted based on the following,
+        refer to the education and experience in the cv to tailor it to the job description.
+        Please leave the name and address blank to be filled in by the user later
 
         - **Candidate's CV**:
         {user_cv}
