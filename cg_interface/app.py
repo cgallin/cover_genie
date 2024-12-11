@@ -2,6 +2,8 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 import requests
 import pdfplumber
+from io import BytesIO
+import PyPDF2
 
 
 # User input page
@@ -37,10 +39,11 @@ with st.form(key='upload_cv'):
     # Upload CV as PDF
     uploaded_file = st.file_uploader("Upload your CV (PDF format):", type=["pdf"])
 
+
     user_cv = ""
     if uploaded_file is not None:
         try:
-            with pdfplumber.open(uploaded_file) as pdf:
+            with pdfplumber.open(BytesIO(uploaded_file.read())) as pdf:
                 # Extract text from all pages of the PDF
                 user_cv = "".join([page.extract_text() for page in pdf.pages])
             st.success("CV uploaded and processed successfully!")
