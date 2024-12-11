@@ -9,5 +9,10 @@ COPY recommendation /recommendation
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN python -c "import nltk; nltk.download('stopwords')"
+RUN python -c "import nltk; nltk.download('punkt_tab')"
+RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger')"
+RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng')"
+RUN python -c "import nltk; nltk.download('wordnet')"
 
 CMD uvicorn cg_api.fast_api:app --host 0.0.0.0
