@@ -3,7 +3,7 @@ from streamlit_extras.switch_page_button import switch_page
 import requests
 import pdfplumber
 from io import BytesIO
-import PyPDF2
+
 
 
 # User input page

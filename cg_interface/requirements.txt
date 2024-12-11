@@ -22,4 +22,3 @@ typing
 regex
 gcloud
 python-dotenv
-PyPDF2
