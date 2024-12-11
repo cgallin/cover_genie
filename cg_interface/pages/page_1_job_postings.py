@@ -26,7 +26,7 @@ else:
         for item in job_recommendations:
             with st.expander(f"{item['title']} - {item['company']}"):
                 st.write(f"**Description:** {item['description']}")
-                st.write(f"**Job Provider:** {item['jobProviders']}")
+                st.link_button("Job Posting", item['jobProviders'])
                 job_descriptions.append(item['description'])
 
         # Submit button to generate cover letters
