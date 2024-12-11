@@ -21,3 +21,4 @@ streamlit_themes
 typing
 regex
 gcloud
+python-dotenv
