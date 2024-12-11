@@ -13,14 +13,14 @@ else:
     st.markdown('''# Your Generated Cover Letters 🧞‍♀️''')
 
     # Display each cover letter dynamically in expanders
-    for i, (key, cover_letter) in enumerate(cover_letters.items(), start=1):
+    for i, (key, cover_letter) in enumerate(cover_letters.items()):
         with st.expander(f"Cover Letter {i}"):
             st.write(cover_letter)
             # Copy button for each cover letter
             if st.button(f"Copy Cover Letter {i}", key=f'copy_{i}'):
                 pyperclip.copy(cover_letter)
                 st.success(f"Cover Letter {i} copied successfully!")
-
+            st.link_button("Job Posting", job_recommendations[i]['jobProviders'])
     st.markdown("### Apply to Jobs")
     # Placeholder for future job application links
     st.write("Here you can provide application links for each job.")
