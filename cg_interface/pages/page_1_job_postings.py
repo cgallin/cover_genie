@@ -43,7 +43,7 @@ else:
                         'job_descriptions': json.dumps(job_descriptions),  # Convert list to JSON string
                     }
 
-                    url = 'http://127.0.0.1:8000/generate'
+                    url = 'https://cover-genie-696845380208.us-east1.run.app/generate'
 
                     with st.spinner("Generating cover letters..."):
                         response = requests.get(url, params=params)

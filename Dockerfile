@@ -15,4 +15,4 @@ RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger')"
 RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng')"
 RUN python -c "import nltk; nltk.download('wordnet')"
 
-CMD uvicorn cg_api.fast_api:app --host 0.0.0.0
+CMD uvicorn cg_api.fast_api:app --host 0.0.0.0 --port $PORT

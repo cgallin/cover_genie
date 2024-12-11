@@ -68,7 +68,7 @@ with st.form(key='upload_cv'):
         if 'user_cv' not in st.session_state:
             st.session_state.user_cv = user_cv
 
-        url = 'http://127.0.0.1:8000/recommend'
+        url = 'https://cover-genie-696845380208.us-east1.run.app/recommend'
 
         response = requests.get(url, params=query_params)
         if response.status_code == 200:
